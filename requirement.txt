@@ -1,0 +1,11 @@
+langgraph
+langchain-core
+langchain-ollama
+pydantic
+pandas
+python-dotenv
+jsonschema
+tenacity
+PyYAML
+pytest
+pytest-cov

@@ -1,0 +1,97 @@
+{
+  "run_id": "run-d8d4102c-5fa9-42b2-a3b2-4a913f994d20",
+  "generated_at": "2026-08-05T03:23:48.856883+00:00",
+  "framework": "langgraph",
+  "runtime": "ollama",
+  "schema_version": "1.0",
+  "agents": [
+    {
+      "agent_id": "coordinator_agent",
+      "role": "coordinator",
+      "model_name": "qwen2.5:7b-instruct",
+      "parameter_count": 7000000000,
+      "prompt_version": "coordinator-v1",
+      "allowed_tools": [
+        "invoke_agent",
+        "validate_contract"
+      ],
+      "input_schema": "CaseInput",
+      "output_schema": "CaseRunResult",
+      "temperature": 0.0
+    },
+    {
+      "agent_id": "order_seller_agent",
+      "role": "order_seller",
+      "model_name": "qwen2.5:7b-instruct",
+      "parameter_count": 7000000000,
+      "prompt_version": "order-seller-v1",
+      "allowed_tools": [
+        "lookup_order",
+        "lookup_items",
+        "lookup_sellers"
+      ],
+      "input_schema": "CaseInput",
+      "output_schema": "OrderSellerFacts",
+      "temperature": 0.0
+    },
+    {
+      "agent_id": "payment_agent",
+      "role": "payment",
+      "model_name": "qwen2.5:7b-instruct",
+      "parameter_count": 7000000000,
+      "prompt_version": "payment-v1",
+      "allowed_tools": [
+        "lookup_payments",
+        "reconcile_payments"
+      ],
+      "input_schema": "CaseInput",
+      "output_schema": "PaymentFacts",
+      "temperature": 0.0
+    },
+    {
+      "agent_id": "delivery_agent",
+      "role": "delivery",
+      "model_name": "qwen2.5:7b-instruct",
+      "parameter_count": 7000000000,
+      "prompt_version": "delivery-v1",
+      "allowed_tools": [
+        "lookup_delivery_dates",
+        "compare_timestamps"
+      ],
+      "input_schema": "CaseInput",
+      "output_schema": "DeliveryFacts",
+      "temperature": 0.0
+    },
+    {
+      "agent_id": "policy_agent",
+      "role": "policy",
+      "model_name": "qwen2.5:7b-instruct",
+      "parameter_count": 7000000000,
+      "prompt_version": "policy-v1",
+      "allowed_tools": [
+        "evaluate_ec_policy_v1",
+        "assemble_output"
+      ],
+      "input_schema": "InvestigationBundle",
+      "output_schema": "PolicyDecision",
+      "temperature": 0.0
+    },
+    {
+      "agent_id": "verifier_agent",
+      "role": "verifier",
+      "model_name": "qwen2.5:7b-instruct",
+      "parameter_count": 7000000000,
+      "prompt_version": "verifier-v1",
+      "allowed_tools": [
+        "validate_schema",
+        "verify_evidence",
+        "verify_financials",
+        "verify_policy"
+      ],
+      "input_schema": "VerifyRequest",
+      "output_schema": "VerifyResult",
+      "temperature": 0.0
+    }
+  ],
+  "mode": "stub"
+}
