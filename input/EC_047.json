@@ -1,10 +1,10 @@
 {
-  "case_id": "EC_046",
+  "case_id": "EC_047",
   "opened_at": "2018-10-18T00:00:00-03:00",
   "customer_request": {
     "language": "vi",
-    "message": "Tôi thấy đơn hàng có nhiều dòng thanh toán và lo rằng mình bị thu trùng. Hãy đối soát giúp tôi.",
-    "claimed_order_id": "2208f3a59d7067fe62c900692f5fdcaf"
+    "message": "Tôi cho rằng đơn hàng được giao trễ. Hãy kiểm tra nguyên nhân và quyền lợi phù hợp.",
+    "claimed_order_id": "b04477ada8d2ad7fa9d95358baaa785d"
   },
   "policy_version": "EC_POLICY_V1"
 }
