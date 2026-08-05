@@ -6,7 +6,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 CASE_ID_PATTERN = r"^EC_\d{3}$"
@@ -121,22 +121,66 @@ class PaymentFacts(StrictModel):
     payment_total_brl: Decimal = Decimal("0")
     payment_count: int = Field(ge=0)
     reconciliation_delta_brl: Decimal = Decimal("0")
-    is_reconciled: bool
+    is_reconciled_within_0_10: bool | None = None
+    is_reconciled: bool | None = None
     evidence_ids: list[str] = Field(default_factory=list, max_length=10)
+
+    @model_validator(mode="after")
+    def normalize_reconciliation_flag(self) -> "PaymentFacts":
+        if self.is_reconciled_within_0_10 is None and self.is_reconciled is None:
+            raise ValueError("a payment reconciliation flag is required")
+        if self.is_reconciled_within_0_10 is None:
+            self.is_reconciled_within_0_10 = self.is_reconciled
+        if self.is_reconciled is None:
+            self.is_reconciled = self.is_reconciled_within_0_10
+        return self
+
+
+class SellerHandoffViolation(StrictModel):
+    order_item_id: int | None = Field(default=None, gt=0)
+    seller_id: str
+    shipping_limit_date: datetime | None = None
+    delivered_carrier_at: datetime | None = None
 
 
 class DeliveryFacts(StrictModel):
     order_id: str = Field(pattern=ORDER_ID_PATTERN)
-    is_late: bool
+    is_delivered_late: bool | None = None
+    is_late: bool | None = None
     late_stage: Literal["seller", "logistics", "not_late", "undetermined"]
+    seller_handoff_violations: list[SellerHandoffViolation] = Field(
+        default_factory=list, max_length=5
+    )
     violating_seller_ids: list[str] = Field(default_factory=list, max_length=5)
     delivered_carrier_at: datetime | None = None
     delivered_customer_at: datetime | None = None
     estimated_delivery_at: datetime | None = None
     evidence_ids: list[str] = Field(default_factory=list, max_length=10)
+    warnings: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def normalize_delivery_fields(self) -> "DeliveryFacts":
+        if self.is_delivered_late is None and self.is_late is None:
+            if self.late_stage != "undetermined":
+                raise ValueError("a delivery late flag is required")
+        if self.is_delivered_late is None:
+            self.is_delivered_late = self.is_late
+        if self.is_late is None:
+            self.is_late = self.is_delivered_late
+        if not self.seller_handoff_violations and self.violating_seller_ids:
+            self.seller_handoff_violations = [
+                SellerHandoffViolation(seller_id=seller_id)
+                for seller_id in self.violating_seller_ids
+            ]
+        if not self.violating_seller_ids and self.seller_handoff_violations:
+            self.violating_seller_ids = sorted(
+                {violation.seller_id for violation in self.seller_handoff_violations}
+            )[:5]
+        return self
 
 
 class InvestigationBundle(StrictModel):
+    policy_version: Literal["EC_POLICY_V1"]
     case: CaseInput
     order_seller: OrderSellerFacts
     payment: PaymentFacts
@@ -155,14 +199,16 @@ class ResponsibleParty(StrictModel):
 
 
 class PolicyDecision(StrictModel):
+    policy_version: Literal["EC_POLICY_V1"] = "EC_POLICY_V1"
     primary_issue: str
     case_status: Literal["action_required", "no_action"]
-    confidence: float = Field(ge=0.0, le=1.0)
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0)
     ranked_causes: list[RankedCause] = Field(max_length=3)
     responsible_parties: list[ResponsibleParty] = Field(max_length=3)
     recommended_refund_brl: Decimal = Decimal("0")
     resolution_actions: list[str] = Field(max_length=5)
     policy_evidence_ids: list[str] = Field(max_length=3)
+    matched_rule_rank: int = Field(ge=1, le=6)
 
 
 class VerifyError(StrictModel):
@@ -170,6 +216,9 @@ class VerifyError(StrictModel):
     path: str = ""
     message: str
     repair_target: str | None = None
+    repairable: bool = True
+    expected: Any | None = None
+    actual: Any | None = None
 
 
 class VerifyResult(StrictModel):
