@@ -6,6 +6,7 @@ import json
 from typing import Any
 
 from src.agents.delivery import delivery_agent_handler
+from src.agents.order_seller import order_seller_agent_handler
 from src.agents.policy import PolicyAgent
 from src.agents.stubs import stub_handlers
 from src.agents.verifier import VerifierAgent
@@ -30,8 +31,12 @@ def _agent_config(agent_id: str) -> AgentConfig:
 
 
 def build_hybrid_handlers(trace: TraceSink) -> dict[str, Any]:
-    """Use real TV4/TV5 agents while TV2/TV3 remain contract-safe stubs."""
+    """Use real TV2/TV4/TV5 agents while TV3 remains a contract-safe stub."""
     handlers = stub_handlers()
+    order_seller_config = _agent_config("order_seller_agent")
+    handlers["order_seller_agent"] = (
+        lambda envelope: order_seller_agent_handler(envelope, config=order_seller_config)
+    )
     handlers["delivery_agent"] = delivery_agent_handler
     handlers["policy_agent"] = PolicyAgent(
         AuthoritativeEchoInvoker("authoritative_policy_tool_result"),
