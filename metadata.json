@@ -1,6 +1,6 @@
 {
-  "run_id": "run-3afdff26-a51c-4fb9-bc74-11b16c9a7762",
-  "generated_at": "2026-08-05T04:03:37.754884+00:00",
+  "run_id": "run-e8640243-a927-4b82-ba8b-64c4f83f0e21",
+  "generated_at": "2026-08-05T04:21:52.284664+00:00",
   "framework": "langgraph",
   "runtime": "openai",
   "schema_version": "1.0",
@@ -105,5 +105,5 @@
       "temperature": 0.0
     }
   ],
-  "mode": "stub"
+  "mode": "hybrid_cp2"
 }
