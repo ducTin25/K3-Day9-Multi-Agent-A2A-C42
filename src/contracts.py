@@ -251,3 +251,4 @@ class CaseRunResult(StrictModel):
     state: Literal["VERIFIED", "FAILED"]
     verify_result: VerifyResult
     stub: bool = True
+    output_path: str | None = None

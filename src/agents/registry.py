@@ -6,6 +6,8 @@ import json
 from typing import Any
 
 from src.agents.delivery import delivery_agent_handler
+from src.agents.order_seller import OrderSellerAgent
+from src.agents.payment import PaymentAgent
 from src.agents.policy import PolicyAgent
 from src.agents.stubs import stub_handlers
 from src.agents.verifier import VerifierAgent
@@ -30,8 +32,12 @@ def _agent_config(agent_id: str) -> AgentConfig:
 
 
 def build_hybrid_handlers(trace: TraceSink) -> dict[str, Any]:
-    """Use real TV4/TV5 agents while TV2/TV3 remain contract-safe stubs."""
+    """Use real TV2/TV3/TV4/TV5 agent implementations with offline model doubles."""
     handlers = stub_handlers()
+    order_seller = OrderSellerAgent(config=_agent_config("order_seller_agent"))
+    payment = PaymentAgent()
+    handlers["order_seller_agent"] = order_seller.process_task
+    handlers["payment_agent"] = payment.process_task
     handlers["delivery_agent"] = delivery_agent_handler
     handlers["policy_agent"] = PolicyAgent(
         AuthoritativeEchoInvoker("authoritative_policy_tool_result"),

@@ -14,6 +14,7 @@ from src.agents.registry import build_hybrid_handlers
 from src.agents.stubs import stub_handlers
 from src.config import load_runtime_config
 from src.preflight import run_preflight
+from src.output_writer import AtomicOutputWriter
 from src.runtime import AgentRuntime
 from src.tracing import TraceSink
 
@@ -51,8 +52,8 @@ async def run_stub_case(case_id: str) -> dict:
     return result.model_dump(mode="json")
 
 
-async def run_hybrid_case(case_id: str) -> dict:
-    """Run real TV4/TV5 handlers and offline stubs for pending TV2/TV3 agents."""
+async def run_hybrid_case(case_id: str, *, write_output: bool = False) -> dict:
+    """Run all domain agents plus offline model doubles for staged integration."""
     load_runtime_config()
     cases, _ = run_preflight(ROOT)
     if case_id not in cases:
@@ -61,7 +62,8 @@ async def run_hybrid_case(case_id: str) -> dict:
     trace = TraceSink(ROOT / "trace.jsonl", reset=True)
     runtime = AgentRuntime(trace, build_hybrid_handlers(trace))
     coordinator = CoordinatorAgent(runtime)
-    result = await coordinator.run_stub(cases[case_id], run_id)
+    writer = AtomicOutputWriter(ROOT / "output") if write_output else None
+    result = await coordinator.run_stub(cases[case_id], run_id, writer=writer)
     write_metadata(run_id, mode="hybrid_cp2")
     return result.model_dump(mode="json")
 
@@ -75,7 +77,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--hybrid",
         action="store_true",
-        help="use real TV4/TV5 agents and offline TV2/TV3 stubs",
+        help="use all real domain agents and offline Policy/Verifier model doubles",
+    )
+    parser.add_argument(
+        "--write-output",
+        action="store_true",
+        help="atomically write a verified hybrid draft to output/",
     )
     return parser
 
@@ -90,8 +97,12 @@ def main() -> int:
             return 0
         if args.stub == args.hybrid:
             raise ValueError("choose exactly one execution mode: --stub or --hybrid")
-        target = run_hybrid_case if args.hybrid else run_stub_case
-        result = asyncio.run(target(args.case))
+        if args.write_output and not args.hybrid:
+            raise ValueError("--write-output is only supported with --hybrid")
+        if args.hybrid:
+            result = asyncio.run(run_hybrid_case(args.case, write_output=args.write_output))
+        else:
+            result = asyncio.run(run_stub_case(args.case))
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except Exception as exc:
