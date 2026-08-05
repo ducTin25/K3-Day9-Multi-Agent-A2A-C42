@@ -7,10 +7,13 @@ from pathlib import Path
 import pytest
 
 from src.agents.coordinator import CoordinatorAgent
+from src.agents.order_seller import OrderSellerAgent
+from src.agents.payment import PaymentAgent
 from src.agents.registry import build_hybrid_handlers
 from src.contracts import HandoffEnvelope
 from src.preflight import run_preflight
 from src.runtime import AgentRuntime
+from src.output_writer import AtomicOutputWriter
 from src.tracing import TraceSink
 
 
@@ -76,6 +79,8 @@ def test_hybrid_flow_uses_real_tv4_tv5_boundaries(tmp_path: Path) -> None:
     runtime = AgentRuntime(trace, handlers)
     result = asyncio.run(CoordinatorAgent(runtime).run_stub(cases["EC_001"], "hybrid-test"))
     assert result.state == "VERIFIED"
+    assert isinstance(handlers["order_seller_agent"].__self__, OrderSellerAgent)
+    assert isinstance(handlers["payment_agent"].__self__, PaymentAgent)
     assert handlers["delivery_agent"].__name__ == "delivery_agent_handler"
     events = read_events(trace_path)
     agents = {event["agent"] for event in events}
@@ -88,3 +93,20 @@ def test_hybrid_flow_uses_real_tv4_tv5_boundaries(tmp_path: Path) -> None:
         "verifier_agent",
     } <= agents
     assert any(event["event"] == "tool_completed" for event in events)
+
+
+def test_hybrid_flow_can_atomically_write_only_verified_draft(tmp_path: Path) -> None:
+    cases, _ = run_preflight(ROOT)
+    trace = TraceSink(tmp_path / "trace.jsonl")
+    runtime = AgentRuntime(trace, build_hybrid_handlers(trace))
+    writer = AtomicOutputWriter(tmp_path / "output")
+    result = asyncio.run(
+        CoordinatorAgent(runtime).run_stub(
+            cases["EC_001"], "hybrid-write-test", writer=writer
+        )
+    )
+    assert result.state == "VERIFIED"
+    assert result.output_path is not None
+    output_path = Path(result.output_path)
+    assert output_path.name == "EC_001.json"
+    assert json.loads(output_path.read_text(encoding="utf-8"))["case_id"] == "EC_001"

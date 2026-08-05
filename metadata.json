@@ -1,6 +1,6 @@
 {
-  "run_id": "run-e8640243-a927-4b82-ba8b-64c4f83f0e21",
-  "generated_at": "2026-08-05T04:21:52.284664+00:00",
+  "run_id": "run-938f4da2-c372-4472-9f23-23b5be812209",
+  "generated_at": "2026-08-05T04:32:24.815790+00:00",
   "framework": "langgraph",
   "runtime": "openai",
   "schema_version": "1.0",
@@ -30,9 +30,9 @@
       "parameter_count_source": "user_attested",
       "prompt_version": "order-seller-v1",
       "allowed_tools": [
-        "lookup_order",
-        "lookup_items",
-        "lookup_sellers"
+        "lookup_order_seller_facts",
+        "list_case_order_ids",
+        "evidence_exists"
       ],
       "input_schema": "CaseInput",
       "output_schema": "OrderSellerFacts",

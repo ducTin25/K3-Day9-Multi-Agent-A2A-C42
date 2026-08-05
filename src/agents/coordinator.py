@@ -22,6 +22,8 @@ from src.contracts import (
     VerifyResult,
 )
 from src.runtime import AgentRuntime
+from src.agents.tv5_handlers import assemble_tv5_draft
+from src.output_writer import AtomicOutputWriter
 
 
 class CoordinatorState(TypedDict, total=False):
@@ -33,6 +35,7 @@ class CoordinatorState(TypedDict, total=False):
     delivery: DeliveryFacts
     bundle: InvestigationBundle
     decision: PolicyDecision
+    draft_output: dict[str, Any]
     verify_result: VerifyResult
 
 
@@ -106,20 +109,31 @@ class CoordinatorAgent:
             evidence,
         )
         raw = await self.runtime.invoke(envelope)
-        return {"decision": PolicyDecision.model_validate(raw)}
+        decision = PolicyDecision.model_validate(raw)
+        draft_output = assemble_tv5_draft(
+            state["bundle"], decision, envelope, self.runtime.trace
+        )
+        return {"decision": decision, "draft_output": draft_output}
 
     async def _invoke_verifier(self, state: CoordinatorState) -> dict[str, Any]:
         payload = {
             "case": state["case"].model_dump(mode="json"),
             "bundle": state["bundle"].model_dump(mode="json"),
             "decision": state["decision"].model_dump(mode="json"),
+            "draft_output": state["draft_output"],
             "stub": True,
         }
         envelope = self._envelope(state, "verifier_agent", "VERIFY_REQUEST", payload)
         raw = await self.runtime.invoke(envelope)
         return {"verify_result": VerifyResult.model_validate(raw)}
 
-    async def run_stub(self, case: CaseInput, run_id: str) -> CaseRunResult:
+    async def run_stub(
+        self,
+        case: CaseInput,
+        run_id: str,
+        *,
+        writer: AtomicOutputWriter | None = None,
+    ) -> CaseRunResult:
         correlation_id = str(uuid4())
         self.runtime.trace.emit(
             TraceEvent(
@@ -137,6 +151,13 @@ class CoordinatorAgent:
         )
         verify = result["verify_result"]
         state = "VERIFIED" if verify.valid else "FAILED"
+        output_path = None
+        if writer is not None and verify.valid:
+            output_path = str(
+                writer.write_verified(
+                    result["draft_output"], verify, expected_case_id=case.case_id
+                )
+            )
         self.runtime.trace.emit(
             TraceEvent(
                 run_id=run_id,
@@ -156,4 +177,5 @@ class CoordinatorAgent:
             state=state,
             verify_result=verify,
             stub=True,
+            output_path=output_path,
         )
