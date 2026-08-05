@@ -27,7 +27,7 @@ async def payment_stub(envelope: HandoffEnvelope) -> dict[str, Any]:
         "payment_total_brl": "0.00",
         "payment_count": 0,
         "reconciliation_delta_brl": "0.00",
-        "is_reconciled": True,
+        "is_reconciled_within_0_10": True,
         "evidence_ids": [],
     }
 
@@ -36,15 +36,16 @@ async def delivery_stub(envelope: HandoffEnvelope) -> dict[str, Any]:
     order_id = envelope.payload["claimed_order_id"]
     return {
         "order_id": order_id,
-        "is_late": False,
+        "is_delivered_late": False,
         "late_stage": "not_late",
-        "violating_seller_ids": [],
+        "seller_handoff_violations": [],
         "evidence_ids": [f"order:{order_id}"],
     }
 
 
 async def policy_stub(envelope: HandoffEnvelope) -> dict[str, Any]:
     return {
+        "policy_version": "EC_POLICY_V1",
         "primary_issue": "unsupported_late_claim",
         "case_status": "no_action",
         "confidence": 1.0,
@@ -53,6 +54,7 @@ async def policy_stub(envelope: HandoffEnvelope) -> dict[str, Any]:
         "recommended_refund_brl": "0.00",
         "resolution_actions": ["reject_late_refund"],
         "policy_evidence_ids": ["policy:DELIVERY_WITHIN_ESTIMATE"],
+        "matched_rule_rank": 6,
     }
 
 
@@ -68,4 +70,3 @@ def stub_handlers() -> dict[str, Any]:
         "policy_agent": policy_stub,
         "verifier_agent": verifier_stub,
     }
-

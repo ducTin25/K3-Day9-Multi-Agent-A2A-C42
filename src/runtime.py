@@ -15,27 +15,78 @@ AgentHandler = Callable[[HandoffEnvelope], Awaitable[dict[str, Any]]]
 
 
 class AgentRuntime:
-    def __init__(self, trace: TraceSink, handlers: dict[str, AgentHandler], timeout_seconds: float = 30.0) -> None:
+    def __init__(
+        self,
+        trace: TraceSink,
+        handlers: dict[str, AgentHandler],
+        timeout_seconds: float = 30.0,
+        max_retries: int = 1,
+    ) -> None:
+        if max_retries not in (0, 1):
+            raise ValueError("max_retries must be 0 or 1 for the CP2 runtime")
         self.trace = trace
         self.handlers = handlers
         self.timeout_seconds = timeout_seconds
+        self.max_retries = max_retries
 
     async def invoke(self, envelope: HandoffEnvelope) -> dict[str, Any]:
         if envelope.receiver not in self.handlers:
             raise KeyError(f"no handler registered for {envelope.receiver}")
-        started = time.perf_counter()
-        self._trace(envelope, "invocation_started", "started")
-        try:
-            result = await asyncio.wait_for(
-                self.handlers[envelope.receiver](envelope), timeout=self.timeout_seconds
-            )
-        except Exception as exc:
+        for retry in range(self.max_retries + 1):
+            attempt_envelope = envelope.model_copy(update={"attempt": envelope.attempt + retry})
+            started = time.perf_counter()
+            self._trace(attempt_envelope, "invocation_started", "started")
+            try:
+                result = await asyncio.wait_for(
+                    self.handlers[attempt_envelope.receiver](attempt_envelope),
+                    timeout=self.timeout_seconds,
+                )
+            except Exception as exc:
+                duration = int((time.perf_counter() - started) * 1000)
+                error_type = self._classify_error(exc)
+                self._trace(
+                    attempt_envelope,
+                    "invocation_failed",
+                    "failed",
+                    duration,
+                    summary={"error_type": error_type},
+                    error=str(exc),
+                )
+                if retry >= self.max_retries or not self._is_retryable(exc):
+                    raise
+                self._trace(
+                    attempt_envelope,
+                    "retry_scheduled",
+                    "succeeded",
+                    summary={"next_attempt": attempt_envelope.attempt + 1, "error_type": error_type},
+                )
+                continue
             duration = int((time.perf_counter() - started) * 1000)
-            self._trace(envelope, "invocation_failed", "failed", duration, error=str(exc))
-            raise
-        duration = int((time.perf_counter() - started) * 1000)
-        self._trace(envelope, "invocation_succeeded", "succeeded", duration, summary=result)
-        return result
+            self._trace(
+                attempt_envelope,
+                "invocation_succeeded",
+                "succeeded",
+                duration,
+                summary=result,
+            )
+            return result
+        raise RuntimeError("agent invocation exhausted without a terminal result")
+
+    @staticmethod
+    def _is_retryable(exc: Exception) -> bool:
+        return isinstance(exc, (TimeoutError, ConnectionError, OSError))
+
+    @staticmethod
+    def _classify_error(exc: Exception) -> str:
+        if isinstance(exc, TimeoutError):
+            return "timeout"
+        if isinstance(exc, ConnectionError):
+            return "connection"
+        if isinstance(exc, OSError):
+            return "io"
+        if isinstance(exc, (ValueError, TypeError)):
+            return "contract"
+        return "agent"
 
     def _trace(
         self,
@@ -65,4 +116,3 @@ class AgentRuntime:
                 error=error,
             )
         )
-

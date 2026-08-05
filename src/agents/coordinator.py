@@ -82,7 +82,11 @@ class CoordinatorAgent:
         payment = PaymentFacts.model_validate(payment_raw)
         delivery = DeliveryFacts.model_validate(delivery_raw)
         bundle = InvestigationBundle(
-            case=state["case"], order_seller=order, payment=payment, delivery=delivery
+            policy_version=state["case"].policy_version,
+            case=state["case"],
+            order_seller=order,
+            payment=payment,
+            delivery=delivery,
         )
         return {"order_seller": order, "payment": payment, "delivery": delivery, "bundle": bundle}
 
@@ -153,4 +157,3 @@ class CoordinatorAgent:
             verify_result=verify,
             stub=True,
         )
-

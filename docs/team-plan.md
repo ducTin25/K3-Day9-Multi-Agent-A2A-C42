@@ -374,8 +374,8 @@ Phần này giúp mỗi người theo dõi xuyên suốt mà không phải đọ
 
 #### TV1 — Coordinator/runtime
 
-- [ ] CP0: preflight 50 case, scaffold, contract v1, model guard.
-- [ ] CP1: stub multi-agent flow và trace envelope.
+- [x] CP0: preflight 50 case, scaffold, contract v1, model guard.
+- [x] CP1: stub multi-agent flow và trace envelope.
 - [ ] CP2: agent runtime, fan-out/fan-in, timeout/retry.
 - [ ] CP3: nối adapters, targeted repair, atomic writer.
 - [ ] CP4: chạy 50 case, route lỗi và chốt run thành công.
