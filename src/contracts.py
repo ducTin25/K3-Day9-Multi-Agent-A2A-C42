@@ -31,12 +31,21 @@ class AgentConfig(StrictModel):
     agent_id: str
     role: str
     model_name: str
-    parameter_count: int = Field(gt=0, le=MAX_MODEL_PARAMETERS)
+    parameter_count: int | None = Field(default=None, gt=0, le=MAX_MODEL_PARAMETERS)
+    parameter_count_upper_bound: int | None = Field(default=None, gt=0, le=MAX_MODEL_PARAMETERS)
+    parameter_count_source: Literal["official", "provider", "user_attested"]
     prompt_version: str
     allowed_tools: list[str]
     input_schema: str
     output_schema: str
     temperature: float = Field(default=0.0, ge=0.0, le=2.0)
+
+    @field_validator("parameter_count_upper_bound")
+    @classmethod
+    def require_parameter_evidence(cls, value: int | None, info: Any) -> int | None:
+        if info.data.get("parameter_count") is None and value is None:
+            raise ValueError("parameter_count or a <=10B upper bound is required")
+        return value
 
 
 class RuntimeConfig(StrictModel):
@@ -193,4 +202,3 @@ class CaseRunResult(StrictModel):
     state: Literal["VERIFIED", "FAILED"]
     verify_result: VerifyResult
     stub: bool = True
-

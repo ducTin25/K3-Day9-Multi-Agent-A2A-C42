@@ -1,53 +1,64 @@
 schema_version: "1.0"
 framework: langgraph
-runtime: ollama
+runtime: openai
 agents:
   - agent_id: coordinator_agent
     role: coordinator
-    model_name: qwen2.5:7b-instruct
-    parameter_count: 7000000000
+    model_name: o4-mini
+    parameter_count: null
+    parameter_count_upper_bound: 10000000000
+    parameter_count_source: user_attested
     prompt_version: coordinator-v1
     allowed_tools: [invoke_agent, validate_contract]
     input_schema: CaseInput
     output_schema: CaseRunResult
   - agent_id: order_seller_agent
     role: order_seller
-    model_name: qwen2.5:7b-instruct
-    parameter_count: 7000000000
+    model_name: o4-mini
+    parameter_count: null
+    parameter_count_upper_bound: 10000000000
+    parameter_count_source: user_attested
     prompt_version: order-seller-v1
     allowed_tools: [lookup_order, lookup_items, lookup_sellers]
     input_schema: CaseInput
     output_schema: OrderSellerFacts
   - agent_id: payment_agent
     role: payment
-    model_name: qwen2.5:7b-instruct
-    parameter_count: 7000000000
+    model_name: o4-mini
+    parameter_count: null
+    parameter_count_upper_bound: 10000000000
+    parameter_count_source: user_attested
     prompt_version: payment-v1
     allowed_tools: [lookup_payments, reconcile_payments]
     input_schema: CaseInput
     output_schema: PaymentFacts
   - agent_id: delivery_agent
     role: delivery
-    model_name: qwen2.5:7b-instruct
-    parameter_count: 7000000000
+    model_name: o4-mini
+    parameter_count: null
+    parameter_count_upper_bound: 10000000000
+    parameter_count_source: user_attested
     prompt_version: delivery-v1
     allowed_tools: [lookup_delivery_dates, compare_timestamps]
     input_schema: CaseInput
     output_schema: DeliveryFacts
   - agent_id: policy_agent
     role: policy
-    model_name: qwen2.5:7b-instruct
-    parameter_count: 7000000000
+    model_name: o4-mini
+    parameter_count: null
+    parameter_count_upper_bound: 10000000000
+    parameter_count_source: user_attested
     prompt_version: policy-v1
     allowed_tools: [evaluate_ec_policy_v1, assemble_output]
     input_schema: InvestigationBundle
     output_schema: PolicyDecision
   - agent_id: verifier_agent
     role: verifier
-    model_name: qwen2.5:7b-instruct
-    parameter_count: 7000000000
+    model_name: o4-mini
+    parameter_count: null
+    parameter_count_upper_bound: 10000000000
+    parameter_count_source: user_attested
     prompt_version: verifier-v1
     allowed_tools: [validate_schema, verify_evidence, verify_financials, verify_policy]
     input_schema: VerifyRequest
     output_schema: VerifyResult
-

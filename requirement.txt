@@ -1,6 +1,6 @@
 langgraph
 langchain-core
-langchain-ollama
+langchain-openai
 pydantic
 pandas
 python-dotenv
