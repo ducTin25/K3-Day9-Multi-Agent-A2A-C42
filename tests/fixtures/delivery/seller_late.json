@@ -1,0 +1,35 @@
+{
+  "order_id": "ord_seller_late_002",
+  "delivered_customer_at": "2018-05-20 14:00:00",
+  "estimated_delivery_at": "2018-05-15 00:00:00",
+  "delivered_carrier_at": "2018-05-10 10:00:00",
+  "items": [
+    {
+      "order_item_id": 1,
+      "seller_id": "seller_xyz",
+      "shipping_limit_date": "2018-05-07 00:00:00"
+    }
+  ],
+  "expected_delivery_facts": {
+    "order_id": "ord_seller_late_002",
+    "delivered_customer_at": "2018-05-20 14:00:00",
+    "estimated_delivery_at": "2018-05-15 00:00:00",
+    "delivered_carrier_at": "2018-05-10 10:00:00",
+    "is_delivered_late": true,
+    "seller_handoff_violations": [
+      {
+        "order_item_id": 1,
+        "seller_id": "seller_xyz",
+        "shipping_limit_date": "2018-05-07 00:00:00",
+        "delivered_carrier_at": "2018-05-10 10:00:00"
+      }
+    ],
+    "late_stage": "seller",
+    "evidence_ids": [
+      "item:ord_seller_late_002:1",
+      "order:ord_seller_late_002",
+      "seller:seller_xyz"
+    ],
+    "warnings": []
+  }
+}

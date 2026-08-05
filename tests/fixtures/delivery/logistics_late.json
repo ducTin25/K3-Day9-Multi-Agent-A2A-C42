@@ -1,0 +1,26 @@
+{
+  "order_id": "ord_logistics_late_003",
+  "delivered_customer_at": "2018-05-20 14:00:00",
+  "estimated_delivery_at": "2018-05-15 00:00:00",
+  "delivered_carrier_at": "2018-05-06 10:00:00",
+  "items": [
+    {
+      "order_item_id": 1,
+      "seller_id": "seller_abc",
+      "shipping_limit_date": "2018-05-07 00:00:00"
+    }
+  ],
+  "expected_delivery_facts": {
+    "order_id": "ord_logistics_late_003",
+    "delivered_customer_at": "2018-05-20 14:00:00",
+    "estimated_delivery_at": "2018-05-15 00:00:00",
+    "delivered_carrier_at": "2018-05-06 10:00:00",
+    "is_delivered_late": true,
+    "seller_handoff_violations": [],
+    "late_stage": "logistics",
+    "evidence_ids": [
+      "order:ord_logistics_late_003"
+    ],
+    "warnings": []
+  }
+}

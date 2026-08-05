@@ -1,0 +1,28 @@
+{
+  "order_id": "ord_missing_ts_004",
+  "delivered_customer_at": null,
+  "estimated_delivery_at": "2018-05-15 00:00:00",
+  "delivered_carrier_at": "2018-05-06 10:00:00",
+  "items": [
+    {
+      "order_item_id": 1,
+      "seller_id": "seller_abc",
+      "shipping_limit_date": "2018-05-07 00:00:00"
+    }
+  ],
+  "expected_delivery_facts": {
+    "order_id": "ord_missing_ts_004",
+    "delivered_customer_at": null,
+    "estimated_delivery_at": "2018-05-15 00:00:00",
+    "delivered_carrier_at": "2018-05-06 10:00:00",
+    "is_delivered_late": false,
+    "seller_handoff_violations": [],
+    "late_stage": "undetermined",
+    "evidence_ids": [
+      "order:ord_missing_ts_004"
+    ],
+    "warnings": [
+      "Missing delivered_customer_at timestamp"
+    ]
+  }
+}
