@@ -276,4 +276,3 @@ Một thay đổi nghiệp vụ chỉ sẵn sàng triển khai khi:
 - Có ít nhất một acceptance scenario cho happy path và boundary/error path.
 - Không mâu thuẫn với output schema và evidence convention.
 - Nếu thay đổi `EC_POLICY_V1`, policy code, verifier và golden test phải được cập nhật đồng bộ.
-
