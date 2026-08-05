@@ -180,7 +180,7 @@ class DeliveryFacts(StrictModel):
 
 
 class InvestigationBundle(StrictModel):
-    policy_version: Literal["EC_POLICY_V1"]
+    policy_version: Literal["EC_POLICY_V1"] = "EC_POLICY_V1"
     case: CaseInput
     order_seller: OrderSellerFacts
     payment: PaymentFacts
@@ -208,7 +208,7 @@ class PolicyDecision(StrictModel):
     recommended_refund_brl: Decimal = Decimal("0")
     resolution_actions: list[str] = Field(max_length=5)
     policy_evidence_ids: list[str] = Field(max_length=3)
-    matched_rule_rank: int = Field(ge=1, le=6)
+    matched_rule_rank: int | None = Field(default=None, ge=1, le=6)
 
 
 class VerifyError(StrictModel):

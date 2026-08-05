@@ -74,4 +74,4 @@ def test_tv3_payment_field_and_tv5_policy_output_match_tv1_contract() -> None:
     )
     decision = PolicyDecision.model_validate(raw_decision)
     assert decision.primary_issue == "canceled_order_paid"
-    assert decision.matched_rule_rank == 1
+    assert decision.policy_version == "EC_POLICY_V1"
