@@ -1,0 +1,29 @@
+{
+  "order_id": "771ee386b001f06208a7419e4fc1bbd7",
+  "reference_order_total_brl": "100.00",
+  "payments": [
+    {
+      "payment_sequential": 1,
+      "payment_type": "credit_card",
+      "payment_installments": 1,
+      "payment_value_brl": "99.89"
+    }
+  ],
+  "expected_payment_facts": {
+    "order_id": "771ee386b001f06208a7419e4fc1bbd7",
+    "payments": [
+      {
+        "payment_sequential": 1,
+        "payment_type": "credit_card",
+        "payment_installments": 1,
+        "payment_value_brl": "99.89"
+      }
+    ],
+    "payment_total_brl": "99.89",
+    "payment_count": 1,
+    "reconciliation_delta_brl": "0.11",
+    "is_reconciled": false,
+    "evidence_ids": ["payment:771ee386b001f06208a7419e4fc1bbd7:1"]
+  },
+  "note": "Delta = 0.11 BRL, vuot nguong 0.10 BRL -> is_reconciled=false."
+}
