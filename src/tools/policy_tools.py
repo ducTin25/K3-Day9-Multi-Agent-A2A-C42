@@ -49,6 +49,17 @@ def _required_mapping(bundle: Mapping[str, Any], key: str) -> Mapping[str, Any]:
     return value
 
 
+def _as_mapping(value: Any, *, field: str) -> Mapping[str, Any]:
+    if isinstance(value, Mapping):
+        return value
+    model_dump = getattr(value, "model_dump", None)
+    if callable(model_dump):
+        dumped = model_dump(mode="json")
+        if isinstance(dumped, Mapping):
+            return dumped
+    raise PolicyEvaluationError("POLICY_BUNDLE_INVALID", f"{field} must be an object")
+
+
 def _seller_parties(violations: Sequence[Any]) -> list[dict[str, str]]:
     seller_ids = sorted(
         {
@@ -72,23 +83,23 @@ def _decision(
     parties: list[dict[str, str]],
     refund: Decimal,
     action: str,
-    matched_rule_rank: int,
 ) -> dict[str, Any]:
     return {
-        "policy_version": SUPPORTED_POLICY_VERSION,
         "primary_issue": primary_issue,
         "case_status": "action_required" if refund > 0 else "no_action",
+        "confidence": 1.0,
         "ranked_causes": [{"cause_code": cause_code, "rank": 1}],
         "responsible_parties": parties,
         "recommended_refund_brl": float(refund),
         "resolution_actions": [action],
         "policy_evidence_ids": [f"policy:{cause_code}"],
-        "matched_rule_rank": matched_rule_rank,
     }
 
 
 def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
-    policy_version = bundle.get("policy_version")
+    case = bundle.get("case")
+    case_mapping = _as_mapping(case, field="InvestigationBundle.case") if case is not None else {}
+    policy_version = bundle.get("policy_version") or case_mapping.get("policy_version")
     if policy_version != SUPPORTED_POLICY_VERSION:
         raise PolicyEvaluationError(
             "POLICY_VERSION_UNSUPPORTED",
@@ -110,7 +121,6 @@ def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
             parties=[{"party_type": "platform", "party_id": "OLIST_PLATFORM"}],
             refund=payment_total,
             action="issue_full_refund",
-            matched_rule_rank=1,
         )
 
     if order_status == "unavailable" and payment_total > 0:
@@ -120,11 +130,17 @@ def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
             parties=[{"party_type": "platform", "party_id": "OLIST_PLATFORM"}],
             refund=payment_total,
             action="issue_full_refund",
-            matched_rule_rank=2,
         )
 
     is_late = delivery.get("is_delivered_late")
-    violations = delivery.get("seller_handoff_violations") or []
+    if is_late is None:
+        is_late = delivery.get("is_late")
+    violations = delivery.get("seller_handoff_violations")
+    if violations is None:
+        violations = [
+            {"seller_id": seller_id}
+            for seller_id in delivery.get("violating_seller_ids", [])
+        ]
     if not isinstance(violations, Sequence) or isinstance(violations, (str, bytes)):
         raise PolicyEvaluationError(
             "POLICY_BUNDLE_INVALID", "seller_handoff_violations must be an array"
@@ -137,7 +153,6 @@ def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
             parties=_seller_parties(violations),
             refund=freight_total,
             action="refund_freight",
-            matched_rule_rank=3,
         )
 
     if is_late is True and not violations:
@@ -152,7 +167,6 @@ def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
             ],
             refund=freight_total,
             action="refund_freight",
-            matched_rule_rank=4,
         )
 
     try:
@@ -161,7 +175,10 @@ def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
         raise PolicyEvaluationError(
             "POLICY_BUNDLE_INVALID", "payment_count must be an integer"
         ) from exc
-    reconciled = payment.get("is_reconciled_within_0_10") is True
+    reconciled_value = payment.get("is_reconciled_within_0_10")
+    if reconciled_value is None:
+        reconciled_value = payment.get("is_reconciled")
+    reconciled = reconciled_value is True
 
     if payment_count >= 2 and reconciled:
         return _decision(
@@ -170,7 +187,6 @@ def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
             parties=[],
             refund=Decimal("0.00"),
             action="explain_valid_split_payment",
-            matched_rule_rank=5,
         )
 
     if is_late is False and reconciled:
@@ -180,7 +196,6 @@ def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
             parties=[],
             refund=Decimal("0.00"),
             action="reject_late_refund",
-            matched_rule_rank=6,
         )
 
     raise PolicyEvaluationError(
@@ -190,7 +205,7 @@ def _evaluate(bundle: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def evaluate_policy(
-    bundle: Mapping[str, Any],
+    bundle: Mapping[str, Any] | Any,
     *,
     trace_emit: TraceEmitter | None = None,
     trace_context: Mapping[str, Any] | None = None,
@@ -201,9 +216,10 @@ def evaluate_policy(
     writes directly to ``trace.jsonl``.
     """
 
+    normalized_bundle = _as_mapping(bundle, field="InvestigationBundle")
     started = perf_counter()
     try:
-        result = _evaluate(bundle)
+        result = _evaluate(normalized_bundle)
     except PolicyEvaluationError as exc:
         emit_tool_event(
             trace_emit,
@@ -211,10 +227,10 @@ def evaluate_policy(
             event_type="TOOL_FAILED",
             stage="policy_decision",
             agent_id="policy_agent",
-            tool_name="evaluate_policy",
+            tool_name="evaluate_ec_policy_v1",
             status="failed",
             duration_ms=int((perf_counter() - started) * 1000),
-            input_value=bundle,
+            input_value=normalized_bundle,
             error={"code": exc.code, "message": str(exc)},
         )
         raise
@@ -225,10 +241,14 @@ def evaluate_policy(
         event_type="TOOL_COMPLETED",
         stage="policy_decision",
         agent_id="policy_agent",
-        tool_name="evaluate_policy",
+        tool_name="evaluate_ec_policy_v1",
         status="success",
         duration_ms=int((perf_counter() - started) * 1000),
-        input_value=bundle,
+        input_value=normalized_bundle,
         output_value=result,
     )
     return result
+
+
+# Name declared in the PolicyAgent tool allowlist.
+evaluate_ec_policy_v1 = evaluate_policy

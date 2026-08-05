@@ -1,5 +1,7 @@
 """Logical agent implementations."""
 
-from src.agents.delivery import DeliveryAgent, delivery_agent_handler
+from .policy import PolicyAgent
+from .verifier import VerifierAgent
 
-__all__ = ["DeliveryAgent", "delivery_agent_handler"]
+__all__ = ["PolicyAgent", "VerifierAgent"]
+
