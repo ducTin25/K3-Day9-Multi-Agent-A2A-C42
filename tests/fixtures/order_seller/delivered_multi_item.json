@@ -1,0 +1,36 @@
+{
+  "case_id": "EC_002",
+  "category": "multi-item",
+  "facts": {
+    "order_id": "8067c5e4834f3c0a3c8a4e921d65c5b1",
+    "order_status": "delivered",
+    "delivered_carrier_at": "2018-01-29T17:58:40",
+    "delivered_customer_at": "2018-01-31T21:34:47",
+    "estimated_delivery_at": "2018-02-09T00:00:00",
+    "items": [
+      {
+        "order_item_id": 1,
+        "seller_id": "6973a06f484aacf400ece213dbf3d946",
+        "shipping_limit_date": "2018-01-31T16:39:42",
+        "price_brl": "81.99",
+        "freight_brl": "8.32"
+      },
+      {
+        "order_item_id": 2,
+        "seller_id": "6973a06f484aacf400ece213dbf3d946",
+        "shipping_limit_date": "2018-01-31T16:39:42",
+        "price_brl": "81.99",
+        "freight_brl": "8.32"
+      }
+    ],
+    "item_total_brl": "163.98",
+    "freight_total_brl": "16.64",
+    "evidence_ids": [
+      "order:8067c5e4834f3c0a3c8a4e921d65c5b1",
+      "item:8067c5e4834f3c0a3c8a4e921d65c5b1:1",
+      "item:8067c5e4834f3c0a3c8a4e921d65c5b1:2",
+      "seller:6973a06f484aacf400ece213dbf3d946"
+    ]
+  }
+}
+

@@ -1,0 +1,28 @@
+{
+  "case_id": "EC_001",
+  "category": "delivered",
+  "facts": {
+    "order_id": "e2a03ccf5ea816036608b2d8c3ab8e60",
+    "order_status": "delivered",
+    "delivered_carrier_at": "2017-12-13T13:45:24",
+    "delivered_customer_at": "2017-12-15T18:56:35",
+    "estimated_delivery_at": "2017-12-12T00:00:00",
+    "items": [
+      {
+        "order_item_id": 1,
+        "seller_id": "f7496d659ca9fdaf323c0aae84176632",
+        "shipping_limit_date": "2017-12-04T11:50:50",
+        "price_brl": "119.90",
+        "freight_brl": "12.04"
+      }
+    ],
+    "item_total_brl": "119.90",
+    "freight_total_brl": "12.04",
+    "evidence_ids": [
+      "order:e2a03ccf5ea816036608b2d8c3ab8e60",
+      "item:e2a03ccf5ea816036608b2d8c3ab8e60:1",
+      "seller:f7496d659ca9fdaf323c0aae84176632"
+    ]
+  }
+}
+
