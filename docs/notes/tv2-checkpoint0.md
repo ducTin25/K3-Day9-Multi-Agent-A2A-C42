@@ -61,3 +61,22 @@ Checkpoint 1 verification:
 ```powershell
 python -m pytest tests\test_repository.py tests\test_preprocess_data.py
 ```
+
+## Checkpoint 2 update
+
+TV2 now has a runtime-compatible `OrderSellerAgent`:
+
+- `src/agents/order_seller.py` accepts only `TASK_REQUEST` envelopes addressed to `order_seller_agent`.
+- The agent enforces its allowlist and currently calls only `lookup_order_seller_facts`.
+- It returns `OrderSellerFacts` after Pydantic validation.
+- `src/prompts/order_seller_v1.txt` defines the agent role and boundaries.
+- `src/config/agents.yaml` now lists the concrete TV2 tools:
+  - `lookup_order_seller_facts`
+  - `list_case_order_ids`
+  - `evidence_exists`
+
+Checkpoint 2 verification:
+
+```powershell
+python -m pytest tests\test_order_seller_agent.py tests\test_repository.py tests\test_contracts.py
+```

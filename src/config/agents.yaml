@@ -19,7 +19,7 @@ agents:
     parameter_count_upper_bound: 10000000000
     parameter_count_source: user_attested
     prompt_version: order-seller-v1
-    allowed_tools: [lookup_order, lookup_items, lookup_sellers]
+    allowed_tools: [lookup_order_seller_facts, list_case_order_ids, evidence_exists]
     input_schema: CaseInput
     output_schema: OrderSellerFacts
   - agent_id: payment_agent
