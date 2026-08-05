@@ -1,15 +1,17 @@
 {
-  "run_id": "run-d8d4102c-5fa9-42b2-a3b2-4a913f994d20",
-  "generated_at": "2026-08-05T03:23:48.856883+00:00",
+  "run_id": "run-ab95425b-6b54-47a2-b792-d433e2377c5b",
+  "generated_at": "2026-08-05T03:33:33.999930+00:00",
   "framework": "langgraph",
-  "runtime": "ollama",
+  "runtime": "openai",
   "schema_version": "1.0",
   "agents": [
     {
       "agent_id": "coordinator_agent",
       "role": "coordinator",
-      "model_name": "qwen2.5:7b-instruct",
-      "parameter_count": 7000000000,
+      "model_name": "o4-mini",
+      "parameter_count": null,
+      "parameter_count_upper_bound": 10000000000,
+      "parameter_count_source": "user_attested",
       "prompt_version": "coordinator-v1",
       "allowed_tools": [
         "invoke_agent",
@@ -22,8 +24,10 @@
     {
       "agent_id": "order_seller_agent",
       "role": "order_seller",
-      "model_name": "qwen2.5:7b-instruct",
-      "parameter_count": 7000000000,
+      "model_name": "o4-mini",
+      "parameter_count": null,
+      "parameter_count_upper_bound": 10000000000,
+      "parameter_count_source": "user_attested",
       "prompt_version": "order-seller-v1",
       "allowed_tools": [
         "lookup_order",
@@ -37,8 +41,10 @@
     {
       "agent_id": "payment_agent",
       "role": "payment",
-      "model_name": "qwen2.5:7b-instruct",
-      "parameter_count": 7000000000,
+      "model_name": "o4-mini",
+      "parameter_count": null,
+      "parameter_count_upper_bound": 10000000000,
+      "parameter_count_source": "user_attested",
       "prompt_version": "payment-v1",
       "allowed_tools": [
         "lookup_payments",
@@ -51,8 +57,10 @@
     {
       "agent_id": "delivery_agent",
       "role": "delivery",
-      "model_name": "qwen2.5:7b-instruct",
-      "parameter_count": 7000000000,
+      "model_name": "o4-mini",
+      "parameter_count": null,
+      "parameter_count_upper_bound": 10000000000,
+      "parameter_count_source": "user_attested",
       "prompt_version": "delivery-v1",
       "allowed_tools": [
         "lookup_delivery_dates",
@@ -65,8 +73,10 @@
     {
       "agent_id": "policy_agent",
       "role": "policy",
-      "model_name": "qwen2.5:7b-instruct",
-      "parameter_count": 7000000000,
+      "model_name": "o4-mini",
+      "parameter_count": null,
+      "parameter_count_upper_bound": 10000000000,
+      "parameter_count_source": "user_attested",
       "prompt_version": "policy-v1",
       "allowed_tools": [
         "evaluate_ec_policy_v1",
@@ -79,8 +89,10 @@
     {
       "agent_id": "verifier_agent",
       "role": "verifier",
-      "model_name": "qwen2.5:7b-instruct",
-      "parameter_count": 7000000000,
+      "model_name": "o4-mini",
+      "parameter_count": null,
+      "parameter_count_upper_bound": 10000000000,
+      "parameter_count_source": "user_attested",
       "prompt_version": "verifier-v1",
       "allowed_tools": [
         "validate_schema",
