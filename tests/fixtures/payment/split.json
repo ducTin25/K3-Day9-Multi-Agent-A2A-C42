@@ -1,0 +1,44 @@
+{
+  "order_id": "a9810da82917af2d9aefd1278f1dcfa0",
+  "reference_order_total_brl": "150.00",
+  "payments": [
+    {
+      "payment_sequential": 1,
+      "payment_type": "voucher",
+      "payment_installments": 1,
+      "payment_value_brl": "50.00"
+    },
+    {
+      "payment_sequential": 2,
+      "payment_type": "credit_card",
+      "payment_installments": 3,
+      "payment_value_brl": "100.00"
+    }
+  ],
+  "expected_payment_facts": {
+    "order_id": "a9810da82917af2d9aefd1278f1dcfa0",
+    "payments": [
+      {
+        "payment_sequential": 1,
+        "payment_type": "voucher",
+        "payment_installments": 1,
+        "payment_value_brl": "50.00"
+      },
+      {
+        "payment_sequential": 2,
+        "payment_type": "credit_card",
+        "payment_installments": 3,
+        "payment_value_brl": "100.00"
+      }
+    ],
+    "payment_total_brl": "150.00",
+    "payment_count": 2,
+    "reconciliation_delta_brl": "0.00",
+    "is_reconciled": true,
+    "evidence_ids": [
+      "payment:a9810da82917af2d9aefd1278f1dcfa0:1",
+      "payment:a9810da82917af2d9aefd1278f1dcfa0:2"
+    ]
+  },
+  "note": "2 payment row (voucher + credit_card 3 installment). Tong dung = 50.00 + 100.00 = 150.00. Neu code nham nhan payment_value_brl voi payment_installments se ra 50 + 300 = 350.00 -> sai."
+}

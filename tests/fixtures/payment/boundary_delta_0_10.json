@@ -1,0 +1,29 @@
+{
+  "order_id": "298fcdf1f73eb413e4d26d01b25bc1cd",
+  "reference_order_total_brl": "100.00",
+  "payments": [
+    {
+      "payment_sequential": 1,
+      "payment_type": "credit_card",
+      "payment_installments": 1,
+      "payment_value_brl": "99.90"
+    }
+  ],
+  "expected_payment_facts": {
+    "order_id": "298fcdf1f73eb413e4d26d01b25bc1cd",
+    "payments": [
+      {
+        "payment_sequential": 1,
+        "payment_type": "credit_card",
+        "payment_installments": 1,
+        "payment_value_brl": "99.90"
+      }
+    ],
+    "payment_total_brl": "99.90",
+    "payment_count": 1,
+    "reconciliation_delta_brl": "0.10",
+    "is_reconciled": true,
+    "evidence_ids": ["payment:298fcdf1f73eb413e4d26d01b25bc1cd:1"]
+  },
+  "note": "Delta = 0.10 BRL, dung bang nguong dung sai (PAYMENT_TOLERANCE trong src/tools/policy_tools.py). Nguong duoc coi la inclusive (<= 0.10) -> is_reconciled=true. Day la case bien quan trong nhat, de sai lech <= vs <."
+}

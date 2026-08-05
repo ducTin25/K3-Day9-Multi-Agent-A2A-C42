@@ -1,0 +1,29 @@
+{
+  "order_id": "b81ef226f3fe1789b1e8b2acac839d17",
+  "reference_order_total_brl": "115.00",
+  "payments": [
+    {
+      "payment_sequential": 1,
+      "payment_type": "credit_card",
+      "payment_installments": 8,
+      "payment_value_brl": "115.00"
+    }
+  ],
+  "expected_payment_facts": {
+    "order_id": "b81ef226f3fe1789b1e8b2acac839d17",
+    "payments": [
+      {
+        "payment_sequential": 1,
+        "payment_type": "credit_card",
+        "payment_installments": 8,
+        "payment_value_brl": "115.00"
+      }
+    ],
+    "payment_total_brl": "115.00",
+    "payment_count": 1,
+    "reconciliation_delta_brl": "0.00",
+    "is_reconciled": true,
+    "evidence_ids": ["payment:b81ef226f3fe1789b1e8b2acac839d17:1"]
+  },
+  "note": "1 payment row voi 8 installment; payment_value_brl da la tong tien ca row (khop README muc 2), khong duoc nhan them theo payment_installments."
+}

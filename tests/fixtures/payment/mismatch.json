@@ -1,0 +1,29 @@
+{
+  "order_id": "ba78997921bbcdc1373bb41e913ab953",
+  "reference_order_total_brl": "200.00",
+  "payments": [
+    {
+      "payment_sequential": 1,
+      "payment_type": "credit_card",
+      "payment_installments": 2,
+      "payment_value_brl": "120.00"
+    }
+  ],
+  "expected_payment_facts": {
+    "order_id": "ba78997921bbcdc1373bb41e913ab953",
+    "payments": [
+      {
+        "payment_sequential": 1,
+        "payment_type": "credit_card",
+        "payment_installments": 2,
+        "payment_value_brl": "120.00"
+      }
+    ],
+    "payment_total_brl": "120.00",
+    "payment_count": 1,
+    "reconciliation_delta_brl": "80.00",
+    "is_reconciled": false,
+    "evidence_ids": ["payment:ba78997921bbcdc1373bb41e913ab953:1"]
+  },
+  "note": "Payment thuc te (120.00) lech xa so voi reference_order_total_brl (200.00), delta 80.00 vuot xa tolerance 0.10 -> is_reconciled=false."
+}
