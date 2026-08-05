@@ -311,6 +311,24 @@ def _validate_policy_consistency(output: Mapping[str, Any], errors: list[dict[st
     if assessment.get("case_status") != rule["status"]:
         errors.append(_error("POLICY_STATUS_MISMATCH", "assessment.case_status", "Status does not match primary issue", expected=rule["status"], actual=assessment.get("case_status")))
 
+    if issue in {"valid_split_payment", "unsupported_late_claim"}:
+        item_total = _money(financial.get("item_total_brl"))
+        freight_total = _money(financial.get("freight_total_brl"))
+        payment_total = _money(financial.get("payment_total_brl"))
+        if item_total is not None and freight_total is not None and payment_total is not None:
+            expected_payment = item_total + freight_total
+            if abs(payment_total - expected_payment) > Decimal("0.10"):
+                errors.append(
+                    _error(
+                        "FINANCIAL_TOTAL_MISMATCH",
+                        "financial_resolution.payment_total_brl",
+                        "Payment total is not reconciled with item + freight within 0.10 BRL",
+                        expected=float(expected_payment),
+                        actual=float(payment_total),
+                        repair_target="payment_agent",
+                    )
+                )
+
     refund = _money(financial.get("recommended_refund_brl"))
     expected_refund = Decimal("0.00") if rule["refund_source"] is None else _money(financial.get(rule["refund_source"]))
     if refund is not None and expected_refund is not None and refund != expected_refund:

@@ -16,7 +16,7 @@ from src.contracts import (
     PolicyDecision,
     VerifyResult,
 )
-from src.tools.verification_tools import verify_policy
+from src.tools.verification_tools import verify_output, verify_policy
 from src.tracing import TraceSink
 
 PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "verifier_v1.txt"
@@ -58,11 +58,12 @@ class VerifierAgent:
         raw_decision = envelope.payload.get("decision")
         bundle = InvestigationBundle.model_validate(raw_bundle)
         decision = PolicyDecision.model_validate(raw_decision)
-        authoritative = VerifyResult.model_validate(
+        emitter = tool_trace_emitter(self.trace, envelope)
+        raw_results = [
             verify_policy(
                 bundle,
                 decision,
-                trace_emit=tool_trace_emitter(self.trace, envelope),
+                trace_emit=emitter,
                 trace_context={
                     "run_id": envelope.run_id,
                     "case_id": envelope.case_id,
@@ -70,6 +71,37 @@ class VerifierAgent:
                     "attempt": envelope.attempt,
                 },
             )
+        ]
+        draft_output = envelope.payload.get("draft_output")
+        if draft_output is not None:
+            raw_results.append(
+                verify_output(
+                    draft_output,
+                    expected_case_id=envelope.case_id,
+                    trace_emit=emitter,
+                    trace_context={
+                        "run_id": envelope.run_id,
+                        "case_id": envelope.case_id,
+                        "correlation_id": envelope.correlation_id,
+                        "attempt": envelope.attempt,
+                    },
+                )
+            )
+        contract_errors = [
+            {
+                "code": error["code"],
+                "path": error.get("path", ""),
+                "message": error["message"],
+                "repair_target": error.get("repair_target"),
+            }
+            for result in raw_results
+            for error in result["errors"]
+        ]
+        authoritative = VerifyResult(
+            valid=not contract_errors,
+            repairable=bool(contract_errors)
+            and all(bool(result.get("repairable")) for result in raw_results if result["errors"]),
+            errors=contract_errors,
         )
         payload = {
             "case_id": envelope.case_id,
@@ -77,6 +109,8 @@ class VerifierAgent:
             "policy_decision": decision.model_dump(mode="json"),
             "authoritative_verification_tool_result": authoritative.model_dump(mode="json"),
         }
+        if draft_output is not None:
+            payload["draft_output"] = draft_output
         model_result = await self.structured_model.ainvoke(
             [
                 SystemMessage(content=self.system_prompt),

@@ -17,7 +17,7 @@ PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "policy_v1.txt"
 
 
 class PolicyAgent:
-    REQUIRED_TOOLS = {"evaluate_ec_policy_v1"}
+    REQUIRED_TOOLS = {"evaluate_ec_policy_v1", "assemble_output"}
 
     def __init__(
         self,

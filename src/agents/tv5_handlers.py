@@ -4,10 +4,18 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
+from src.agents._support import tool_trace_emitter
 from src.agents.policy import PolicyAgent
 from src.agents.verifier import VerifierAgent
-from src.contracts import AgentConfig, RuntimeConfig
+from src.contracts import (
+    AgentConfig,
+    HandoffEnvelope,
+    InvestigationBundle,
+    PolicyDecision,
+    RuntimeConfig,
+)
 from src.models import build_chat_model
+from src.tools.output_tools import assemble_output
 from src.tracing import TraceSink
 
 
@@ -30,3 +38,29 @@ def build_tv5_handlers(
         model_factory(verifier_config), verifier_config, trace=trace
     )
     return {"policy_agent": policy, "verifier_agent": verifier}
+
+
+def assemble_tv5_draft(
+    bundle: InvestigationBundle,
+    decision: PolicyDecision,
+    policy_envelope: HandoffEnvelope,
+    trace: TraceSink,
+) -> dict[str, Any]:
+    """Public TV1 integration seam for schema assembly plus sanitized trace."""
+
+    if (
+        policy_envelope.receiver != "policy_agent"
+        or policy_envelope.message_type != "POLICY_REQUEST"
+    ):
+        raise ValueError("draft assembly requires its originating POLICY_REQUEST envelope")
+    return assemble_output(
+        bundle,
+        decision,
+        trace_emit=tool_trace_emitter(trace, policy_envelope),
+        trace_context={
+            "run_id": policy_envelope.run_id,
+            "case_id": policy_envelope.case_id,
+            "correlation_id": policy_envelope.correlation_id,
+            "attempt": policy_envelope.attempt,
+        },
+    )
