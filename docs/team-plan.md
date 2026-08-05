@@ -1,6 +1,6 @@
 # Kế hoạch triển khai cho nhóm 5 thành viên
 
-> Thiết kế runtime, message contract, sequence và state machine chi tiết: [multi-agent-flow.md](multi-agent-flow.md).
+> Thiết kế runtime, message contract, sequence và state machine chi tiết: [multi-agent-flow.md](multi-agent-flow.md). Thiết kế log/trace, metrics và cải tiến giữa các run: [observability-and-improvement.md](observability-and-improvement.md).
 
 ## 1. Mục tiêu và phạm vi
 
@@ -82,6 +82,20 @@ Không cần tiền xử lý geolocation, customers, reviews, products hoặc ca
 
 **Cách tránh block:** TV2 công bố schema của processed tables ngay tại contract freeze 9:50. TV3, TV4 và TV5 tiếp tục phát triển bằng fixtures/raw-tool fakes; chỉ chuyển sang processed repository adapter ở Checkpoint 3. Nếu DP-01 chưa READY lúc 10:10, integration vẫn dùng raw CSV adapter, còn preprocessing được sửa song song và không chặn unit test của agent khác.
 
+### Task LOG-01 — Trace, run history và feedback loop
+
+**Owner:** TV1 xây trace/runtime. **Co-owner:** TV5 xây summary/compare/regression gate. Task bắt đầu từ Checkpoint 0 và chạy xuyên suốt đến khi nộp.
+
+- Mỗi lần chạy tạo thư mục bất biến `logging/runs/<run_id>/`.
+- Ghi `trace.jsonl`, `cases.jsonl`, `errors.jsonl`, `verifier_feedback.jsonl`, `metrics.json`, `summary.md` và `config_snapshot.json` riêng cho run.
+- Mỗi event có run/case/correlation/event ID, agent/model/prompt/tool version, sender/receiver, attempt, evidence, duration, status và error.
+- Flush trace theo từng event để vẫn debug được nếu process crash.
+- Sau run, TV5 so sánh candidate với baseline theo correctness, first-pass verification, repair, error owner, latency và output diff.
+- Không ghi secret/raw authorization. Dùng structured output/hash/summary sau redaction.
+- Khi nộp, TV1 promote một run đạt 50/50: thay thế root `trace.jsonl` bằng trace sanitized của run đó và tạo root `metadata.json`. Không append lịch sử vào root artifact.
+
+**Definition of Done LOG-01:** có thể chọn bất kỳ case/run để dựng lại cây Coordinator → domain agents → Policy → Verifier; lỗi được route tới đúng TV1–TV5; compare report chỉ ra regression/improvement; run thiếu config checksum hoặc agent handoff không được promote.
+
 ### Preflight bắt buộc (9:30-9:50)
 
 1. Đọc mọi payload JSON hợp lệ trong `input/`, chuẩn hóa tên theo trường `case_id`, rồi xác nhận đủ tập duy nhất `EC_001..EC_050`.
@@ -158,7 +172,7 @@ Thay `TV1..TV5` bằng tên thật khi bắt đầu. Mỗi thành viên sở h�
 - Chốt cấu trúc project, contract chung, cấu hình model/framework và CLI chạy 1 case/50 case; thêm startup guard bảo đảm mọi model <=10B.
 - Làm preflight input, chuẩn hóa theo `case_id`, phát hiện thiếu/trùng/sai filename.
 - Xây Coordinator Agent với prompt và tool riêng; fan-out ba agent invocation, fan-in bundle, handoff sang Policy rồi Verifier.
-- Ghi mới `trace.jsonl` cho mỗi run (không append lịch sử cũ), quản lý `run_id` và lỗi theo case.
+- Tạo trace append-only riêng trong `logging/runs/<run_id>/`, quản lý correlation/error theo case; chỉ root `trace.jsonl` bị thay thế khi promote run nộp bài.
 - Dùng stub để hoàn thành orchestration trước khi các agent thật sẵn sàng.
 - Viết `architecture.md` đúng yêu cầu vai trò, quyền truy cập và handoff.
 
@@ -267,11 +281,11 @@ Không đánh dấu `READY` nếu mới viết code nhưng chưa chạy kiểm t
 
 | Thành viên | Việc phải làm | File/artifact bàn giao | Tự kiểm tra trước khi READY |
 | --- | --- | --- | --- |
-| TV1 | Xây `CoordinatorAgent` bằng stub; tạo ba task song song; validate `HandoffEnvelope`; ghi trace event cơ bản | `src/agents/coordinator.py`, `src/runtime.py`, `src/tracing.py`, coordinator tests | Stub flow sinh đủ request/response cho 6 agent; trace có sender/receiver |
+| TV1 | Xây `CoordinatorAgent` bằng stub; tạo ba task song song; validate `HandoffEnvelope`; triển khai LOG-01 run directory và event writer | `src/agents/coordinator.py`, `src/runtime.py`, `src/tracing.py`, run artifacts, coordinator tests | Stub flow sinh đủ request/response cho 6 agent; trace có sender/receiver/correlation tree và sống sót khi process fail giả lập |
 | TV2 | Hoàn tất DP-01 lúc 10:10; xây repository adapter trên processed index và OrderSeller tools; trả order/items/sellers/totals/evidence | `data/processed/olist_case_index.sqlite`, manifest, `src/data/olist_repository.py`, `src/tools/order_tools.py` | DP-01 DoD pass; lookup đúng; không xử lý geolocation/reviews/products không cần thiết |
 | TV3 | Xây Payment tools và Decimal finance helpers | `src/tools/payment_tools.py`, `src/finance.py` | Test sum row, split payment và tolerance pass |
 | TV4 | Xây Delivery tools và timestamp comparator | `src/tools/delivery_tools.py` | Test bằng hạn, trước hạn, sau hạn và thiếu timestamp pass |
-| TV5 | Xây deterministic policy evaluator và schema validator tools | `src/tools/policy_tools.py`, `src/tools/verification_tools.py`, JSON Schema | Sáu golden decisions pass; schema reject enum/list sai |
+| TV5 | Xây deterministic policy evaluator/schema validator và LOG-01 summarize/compare skeleton | policy/verification tools, JSON Schema, `scripts/summarize_run.py`, `scripts/compare_runs.py` | Sáu golden decisions pass; schema reject enum/list sai; sample run tạo metrics/summary |
 
 **Exit gate 10:30:** mỗi người demo một lệnh test trong phạm vi mình; chưa cần gọi model/provider thật. Riêng TV2 phải demo chạy lại DP-01 và truy vấn ít nhất một order có nhiều item/payment từ processed index.
 
@@ -316,11 +330,11 @@ Không đánh dấu `READY` nếu mới viết code nhưng chưa chạy kiểm t
 
 | Thành viên | Dashboard/nhóm lỗi sở hữu | Việc phải làm | Điều kiện hoàn tất |
 | --- | --- | --- | --- |
-| TV1 | Runtime, timeout, trace, missing/duplicate output | Chạy batch; xuất summary; route lỗi; bảo đảm trace là run mới nhất | 50 case đều có terminal state và correlation ID |
+| TV1 | Runtime, timeout, trace, missing/duplicate output | Chạy batch; lưu run history; route lỗi; bảo đảm mọi case có event terminal | 50 case đều có terminal state và correlation tree |
 | TV2 | `ORDER_*`, `ITEM_*`, `SELLER_*`, entity/evidence mismatch | Sửa repository/OrderSeller; kiểm các order đặc biệt | Không còn lỗi entity/order/seller |
 | TV3 | `PAYMENT_*`, `FINANCIAL_*`, tolerance/rounding | Recompute các case lỗi; sửa payment/finance | Không còn mismatch payment/refund |
 | TV4 | `DELIVERY_*`, `TIMESTAMP_*`, handoff classification | Sửa comparator/Delivery output | Không còn case delivery undetermined trong tập chính thức |
-| TV5 | `POLICY_*`, `SCHEMA_*`, `EVIDENCE_*`, verifier reject | Sửa policy/assembler/verifier; chạy pre-submit validator | 50 output pass schema/policy/evidence gate |
+| TV5 | `POLICY_*`, `SCHEMA_*`, `EVIDENCE_*`, verifier reject | Sửa policy/assembler/verifier; tạo summary và compare baseline/candidate; chạy validator | 50 output pass gate; compare report không có regression chưa giải thích |
 
 **Triage SLA:** owner có 10 phút để tái hiện và sửa. Nếu lỗi nằm ở contract, TV1 và owner liên quan tạo một contract patch nhỏ; các thành viên khác tiếp tục review output, không dừng toàn nhóm.
 
@@ -332,11 +346,11 @@ Không đánh dấu `READY` nếu mới viết code nhưng chưa chạy kiểm t
 
 | Thành viên | Việc phải làm | Artifact ký xác nhận |
 | --- | --- | --- |
-| TV1 | Chốt `architecture.md`, root `trace.jsonl`, `metadata.json`; xác nhận 6 model <=10B và trace A2A thật | Architecture/model/trace checklist |
+| TV1 | Chốt architecture; promote run tốt nhất thành root `trace.jsonl`/`metadata.json`; xác nhận 6 model <=10B và trace A2A thật | Architecture/model/trace checklist + promoted run ID |
 | TV2 | Audit affected entities và order/item/seller evidence trên sample + edge cases | Entity/evidence audit note |
 | TV3 | Audit item/freight/payment/refund trên tất cả 50 case bằng recompute script | Financial audit summary |
 | TV4 | Audit late/not-late và seller/logistics party trên mọi delivery case | Delivery classification summary |
-| TV5 | Chạy final schema/evidence/policy validator; tạo zip; kiểm nội dung zip | Validator report và submission zip manifest |
+| TV5 | Chạy final validator; xác nhận compare report; tạo zip; kiểm nội dung zip | Validator report, run comparison và submission zip manifest |
 
 **Final go/no-go checklist:**
 
@@ -344,6 +358,8 @@ Không đánh dấu `READY` nếu mới viết code nhưng chưa chạy kiểm t
 - [ ] `case_id` bên trong khớp filename.
 - [ ] 50/50 pass Verifier và final validator.
 - [ ] `trace.jsonl` là run mới nhất, có đủ 6 agent invocation/case thành công.
+- [ ] `logging/runs/<run_id>/` giữ lịch sử; promoted run ID khớp root trace/metadata.
+- [ ] Candidate không regression so với baseline hoặc mọi diff đã được giải thích/ký xác nhận.
 - [ ] `metadata.json` khai báo cả 6 agent; mọi model/fallback <=10B.
 - [ ] `architecture.md` mô tả role, access và handoff.
 - [ ] Năm báo cáo cá nhân phản ánh đúng ownership/artifact.

@@ -464,6 +464,8 @@ stateDiagram-v2
 
 ## 10. Trace và bằng chứng multi-agent thật
 
+> Thiết kế lưu lịch sử run, error taxonomy, metrics và quy trình so sánh/promote được mô tả tại [observability-and-improvement.md](observability-and-improvement.md).
+
 Mỗi dòng `trace.jsonl` là một JSON object. Tối thiểu mỗi case thành công phải có:
 
 1. Coordinator nhận case.
@@ -497,7 +499,7 @@ Trace event đề xuất:
 }
 ```
 
-Không ghi raw API key, token hoặc toàn bộ prompt chứa secret. Có thể ghi hash của input/output bên cạnh summary để audit mà không làm trace quá lớn.
+Không ghi raw API key, token hoặc toàn bộ prompt chứa secret. Có thể ghi hash của input/output bên cạnh summary để audit mà không làm trace quá lớn. Trace của từng run được lưu bất biến tại `logging/runs/<run_id>/trace.jsonl`; root `trace.jsonl` chỉ là bản sanitized của run được chọn để nộp và bị thay thế nguyên file.
 
 ## 11. Batch flow cho 50 case
 

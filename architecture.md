@@ -63,4 +63,6 @@ Startup guard kiểm `model_name`, `parameter_count`, prompt version, allowed to
 
 ## Audit and verification
 
-`trace.jsonl` của run mới nhất phải chứng minh invocation và handoff thật: sender/receiver, model, parameter count, prompt version, tool calls, evidence IDs, attempt, duration và verify result. Một case thành công phải có invocation độc lập của Coordinator, ba domain agent, Policy và Verifier; một model call duy nhất không được xem là multi-agent.
+Mỗi run có thư mục bất biến `logging/runs/<run_id>/` chứa trace, case summary, errors, verifier feedback, metrics và config snapshot để so sánh/cải tiến. Root `trace.jsonl` chỉ là bản sanitized của run được promote và luôn bị thay thế nguyên file để đúng yêu cầu nộp bài. Thiết kế observability đầy đủ nằm tại [docs/observability-and-improvement.md](docs/observability-and-improvement.md).
+
+Trace phải chứng minh invocation và handoff thật: sender/receiver, model, parameter count, prompt version, tool calls, evidence IDs, attempt, duration và verify result. Một case thành công phải có invocation độc lập của Coordinator, ba domain agent, Policy và Verifier; một model call duy nhất không được xem là multi-agent.
