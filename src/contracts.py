@@ -217,8 +217,10 @@ class VerifyError(StrictModel):
     message: str
     repair_target: str | None = None
     repairable: bool = True
-    expected: Any | None = None
-    actual: Any | None = None
+    # Keep the model-facing repair contract compatible with OpenAI Structured
+    # Outputs. Rich tool diagnostics stay in trace; handoffs only need a scalar.
+    expected: str | int | float | bool | None = None
+    actual: str | int | float | bool | None = None
 
 
 class VerifyResult(StrictModel):
@@ -252,3 +254,4 @@ class CaseRunResult(StrictModel):
     verify_result: VerifyResult
     stub: bool = True
     output_path: str | None = None
+    primary_issue: str | None = None

@@ -28,5 +28,4 @@ def test_stub_flow_invokes_all_six_agents(tmp_path: Path) -> None:
         "policy_agent",
         "verifier_agent",
     }
-    assert not (ROOT / "output" / "EC_001.json").exists()
-
+    assert result.output_path is None

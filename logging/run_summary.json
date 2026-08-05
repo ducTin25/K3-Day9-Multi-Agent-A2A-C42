@@ -1,0 +1,726 @@
+{
+  "concurrency": 2,
+  "errors": [],
+  "failed": 0,
+  "missing_terminal_ids": [],
+  "missing_verified_ids": [],
+  "missing_written_ids": [],
+  "mode": "live_openai",
+  "primary_issue_counts": {
+    "canceled_order_paid": 8,
+    "late_delivery_logistics": 8,
+    "late_delivery_seller": 8,
+    "unavailable_order_paid": 8,
+    "unsupported_late_claim": 9,
+    "valid_split_payment": 9
+  },
+  "received": 50,
+  "results": [
+    {
+      "case_id": "EC_001",
+      "correlation_id": "b13e2015-b6e0-4164-aaa6-684dd69e6741",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_001.json",
+      "primary_issue": "late_delivery_seller",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_002",
+      "correlation_id": "91d80236-6aef-4049-9006-da5a1a9c1ca5",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_002.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_003",
+      "correlation_id": "f1626de3-72cf-4845-a35c-a31f02ff2660",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_003.json",
+      "primary_issue": "canceled_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_004",
+      "correlation_id": "877cf7f5-6b7b-457e-b45b-17fed61efbea",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_004.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_005",
+      "correlation_id": "e7342b45-ad87-4bfd-bc4a-397a41b43964",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_005.json",
+      "primary_issue": "unavailable_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_006",
+      "correlation_id": "d2b1556c-103a-4f1e-af39-f23ceb8c2e92",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_006.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_007",
+      "correlation_id": "196d8663-dce4-4786-9ca0-2a7fb402e7da",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_007.json",
+      "primary_issue": "canceled_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_008",
+      "correlation_id": "8db44392-18c8-4d52-9dc7-c22091d5414a",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_008.json",
+      "primary_issue": "canceled_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_009",
+      "correlation_id": "d872a219-414e-49d3-b511-f3d8111b0ca8",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_009.json",
+      "primary_issue": "late_delivery_logistics",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_010",
+      "correlation_id": "d5be7178-e16e-4982-84eb-87e1bf75fb87",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_010.json",
+      "primary_issue": "late_delivery_logistics",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_011",
+      "correlation_id": "54387972-5155-49db-8821-f0fdf0841a12",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_011.json",
+      "primary_issue": "unavailable_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_012",
+      "correlation_id": "abb82c0c-ac1b-4496-b969-d42a245716e5",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_012.json",
+      "primary_issue": "late_delivery_logistics",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_013",
+      "correlation_id": "81624c4e-a954-4bd0-a5a2-9bb0f4a869f5",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_013.json",
+      "primary_issue": "unavailable_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_014",
+      "correlation_id": "bfeca170-f2d5-4f9e-88b0-22365eb40a9e",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_014.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_015",
+      "correlation_id": "976c1a94-b937-40c0-8330-1115874cc7b4",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_015.json",
+      "primary_issue": "canceled_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_016",
+      "correlation_id": "e49d5b6e-865e-4ce8-97c2-b1de5cd8e708",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_016.json",
+      "primary_issue": "late_delivery_logistics",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_017",
+      "correlation_id": "402a7838-0b04-407e-b0d0-189bb88e40b5",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_017.json",
+      "primary_issue": "late_delivery_logistics",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_018",
+      "correlation_id": "8f709b3a-1b4a-44be-881d-f49d37141be7",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_018.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_019",
+      "correlation_id": "3d2942a7-51d6-48ae-9a82-28b2f9499ea5",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_019.json",
+      "primary_issue": "unavailable_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_020",
+      "correlation_id": "e40c288d-0964-44d5-9fc3-71a2f6779ce0",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_020.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_021",
+      "correlation_id": "8cf9fe3b-6603-4de8-8372-a7bdb1ceacf9",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_021.json",
+      "primary_issue": "canceled_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_022",
+      "correlation_id": "c010ab71-de6b-475c-9df1-254356b58fa7",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_022.json",
+      "primary_issue": "late_delivery_seller",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_023",
+      "correlation_id": "b215815c-ac65-4c6c-9418-06ea6a6310af",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_023.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_024",
+      "correlation_id": "8602bb34-4dc2-4705-93c6-1b92c292e64e",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_024.json",
+      "primary_issue": "unavailable_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_025",
+      "correlation_id": "4f3aa8d0-9395-4c77-b7e7-abca587b3bff",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_025.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_026",
+      "correlation_id": "861b0e34-dcec-493d-8bc8-2042e849a614",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_026.json",
+      "primary_issue": "canceled_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_027",
+      "correlation_id": "43f58f65-6769-4b6e-9a96-fc6993c27a8e",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_027.json",
+      "primary_issue": "unavailable_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_028",
+      "correlation_id": "ba958b6d-449c-4558-9c66-5a090cb6c10e",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_028.json",
+      "primary_issue": "unavailable_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_029",
+      "correlation_id": "cfc9ba3c-51ff-4c18-af4a-2d49d4ceeddb",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_029.json",
+      "primary_issue": "late_delivery_seller",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_030",
+      "correlation_id": "6f464bf0-e153-43ad-87a0-11c045343803",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_030.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_031",
+      "correlation_id": "d93faa29-edb3-4f5d-9143-5f9c1fb6c100",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_031.json",
+      "primary_issue": "late_delivery_logistics",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_032",
+      "correlation_id": "7af9db36-e5ca-4ba3-b74d-6aa524878f57",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_032.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_033",
+      "correlation_id": "52aabf84-e941-40a7-81a2-c9dad800dbb5",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_033.json",
+      "primary_issue": "late_delivery_seller",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_034",
+      "correlation_id": "0705c7d7-59b3-4ce0-a17c-ed45dd323e1a",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_034.json",
+      "primary_issue": "late_delivery_seller",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_035",
+      "correlation_id": "42b63b67-684f-4bec-9a10-d28bd0b636a0",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_035.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_036",
+      "correlation_id": "604b3916-6c53-4241-b74e-bcf26322d4ba",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_036.json",
+      "primary_issue": "unavailable_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_037",
+      "correlation_id": "96857ec7-fcef-4746-9d60-a9ae42d61bd4",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_037.json",
+      "primary_issue": "late_delivery_seller",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_038",
+      "correlation_id": "6031993f-bef4-4902-90bc-b197ab8ce36e",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_038.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_039",
+      "correlation_id": "052bd543-110f-4f64-ade7-29d0477b319c",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_039.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_040",
+      "correlation_id": "044283d2-6716-4ada-b49c-b2263f868cbe",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_040.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_041",
+      "correlation_id": "0e731dbc-903a-468d-905e-ee8e3dd5d983",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_041.json",
+      "primary_issue": "canceled_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_042",
+      "correlation_id": "a9c288dc-611c-48be-8fe5-d24af6cc1418",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_042.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_043",
+      "correlation_id": "e7b3fce7-5ebd-406e-818a-0cad0e135a7c",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_043.json",
+      "primary_issue": "late_delivery_seller",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_044",
+      "correlation_id": "5d86c3e0-90da-496f-a2ab-5cea62becbaa",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_044.json",
+      "primary_issue": "late_delivery_seller",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_045",
+      "correlation_id": "a8773cc2-e9c5-4be9-b978-ec6a28cf1b66",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_045.json",
+      "primary_issue": "canceled_order_paid",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_046",
+      "correlation_id": "9960c354-edde-41bd-b2e0-619ef7e0fb4b",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_046.json",
+      "primary_issue": "valid_split_payment",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_047",
+      "correlation_id": "7f213c01-bfb7-4c29-be87-8eae29ff5273",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_047.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_048",
+      "correlation_id": "af10800e-db7e-4cc7-9250-700b5a49a722",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_048.json",
+      "primary_issue": "unsupported_late_claim",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_049",
+      "correlation_id": "b8412f94-335e-414f-a73e-94aa9bb683b9",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_049.json",
+      "primary_issue": "late_delivery_logistics",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    },
+    {
+      "case_id": "EC_050",
+      "correlation_id": "75daede5-7ed9-41a4-980e-9c1ecf0046eb",
+      "output_path": "C:\\Users\\Admin\\K3-Day9-Multi-Agent-A2A-C42\\output\\EC_050.json",
+      "primary_issue": "late_delivery_logistics",
+      "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+      "state": "VERIFIED",
+      "stub": false,
+      "verify_result": {
+        "errors": [],
+        "repairable": false,
+        "valid": true
+      }
+    }
+  ],
+  "run_id": "run-a572fa36-1a6e-4b44-a343-7c80d2866ef6",
+  "success": true,
+  "terminal": 50,
+  "unexpected_output_ids": [],
+  "verified": 50,
+  "written": 50
+}
