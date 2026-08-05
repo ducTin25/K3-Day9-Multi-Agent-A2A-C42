@@ -11,6 +11,7 @@ from src.agents.payment import PaymentAgent
 from src.agents.policy import PolicyAgent
 from src.agents.stubs import stub_handlers
 from src.agents.verifier import VerifierAgent
+from src.agents.tv5_handlers import build_tv5_handlers
 from src.config import load_runtime_config
 from src.contracts import AgentConfig
 from src.tracing import TraceSink
@@ -49,4 +50,12 @@ def build_hybrid_handlers(trace: TraceSink) -> dict[str, Any]:
         _agent_config("verifier_agent"),
         trace=trace,
     )
+    return handlers
+
+
+def build_live_handlers(trace: TraceSink) -> dict[str, Any]:
+    """Use the integrated domain agents and independent OpenAI-backed TV5 agents."""
+    runtime_config = load_runtime_config()
+    handlers = build_hybrid_handlers(trace)
+    handlers.update(build_tv5_handlers(runtime_config, trace))
     return handlers

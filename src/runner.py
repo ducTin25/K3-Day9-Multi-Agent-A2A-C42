@@ -10,8 +10,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
 
+from dotenv import load_dotenv
+
 from src.agents.coordinator import CoordinatorAgent
-from src.agents.registry import build_hybrid_handlers
+from src.agents.registry import build_hybrid_handlers, build_live_handlers
 from src.agents.stubs import stub_handlers
 from src.config import load_runtime_config
 from src.preflight import run_preflight
@@ -63,10 +65,27 @@ async def run_hybrid_case(case_id: str, *, write_output: bool = False) -> dict:
     run_id = f"run-{uuid4()}"
     trace = TraceSink(ROOT / "trace.jsonl", reset=True)
     runtime = AgentRuntime(trace, build_hybrid_handlers(trace))
-    coordinator = CoordinatorAgent(runtime)
+    coordinator = CoordinatorAgent(runtime, stub=False)
     writer = AtomicOutputWriter(ROOT / "output") if write_output else None
     result = await coordinator.run_stub(cases[case_id], run_id, writer=writer)
     write_metadata(run_id, mode="hybrid_cp2")
+    return result.model_dump(mode="json")
+
+
+async def run_live_case(case_id: str, *, write_output: bool = False) -> dict:
+    """Run one case with independent OpenAI-backed Policy and Verifier agents."""
+    load_dotenv(ROOT / ".env", override=False)
+    load_runtime_config()
+    cases, _ = run_preflight(ROOT)
+    if case_id not in cases:
+        raise ValueError(f"unknown case_id: {case_id}")
+    run_id = f"run-{uuid4()}"
+    trace = TraceSink(ROOT / "trace.jsonl", reset=True)
+    runtime = AgentRuntime(trace, build_live_handlers(trace))
+    coordinator = CoordinatorAgent(runtime, stub=False)
+    writer = AtomicOutputWriter(ROOT / "output") if write_output else None
+    result = await coordinator.run_stub(cases[case_id], run_id, writer=writer)
+    write_metadata(run_id, mode="live_openai")
     return result.model_dump(mode="json")
 
 
@@ -87,7 +106,7 @@ async def run_hybrid_batch(*, concurrency: int = 4, write_output: bool = True) -
     run_id = f"run-{uuid4()}"
     trace = TraceSink(ROOT / "trace.jsonl", reset=True)
     runtime = AgentRuntime(trace, build_hybrid_handlers(trace))
-    coordinator = CoordinatorAgent(runtime)
+    coordinator = CoordinatorAgent(runtime, stub=False)
     writer = AtomicOutputWriter(ROOT / "output") if write_output else None
     if writer is not None:
         for case_id in cases:
@@ -108,6 +127,36 @@ async def run_hybrid_batch(*, concurrency: int = 4, write_output: bool = True) -
     return summary
 
 
+async def run_live_batch(*, concurrency: int = 4, write_output: bool = True) -> dict:
+    """Run all 50 cases with OpenAI-backed Policy and Verifier agents."""
+    load_dotenv(ROOT / ".env", override=False)
+    load_runtime_config()
+    cases, _ = run_preflight(ROOT)
+    run_id = f"run-{uuid4()}"
+    trace = TraceSink(ROOT / "trace.jsonl", reset=True)
+    runtime = AgentRuntime(trace, build_live_handlers(trace))
+    coordinator = CoordinatorAgent(runtime, stub=False)
+    writer = AtomicOutputWriter(ROOT / "output") if write_output else None
+    if writer is not None:
+        for case_id in cases:
+            (ROOT / "output" / f"{case_id}.json").unlink(missing_ok=True)
+    summary = await execute_batch(
+        cases,
+        coordinator,
+        run_id=run_id,
+        writer=writer,
+        concurrency=concurrency,
+    )
+    summary["mode"] = "live_openai"
+    if writer is not None:
+        actual_files = {path.stem for path in (ROOT / "output").glob("EC_*.json")}
+        summary["unexpected_output_ids"] = sorted(actual_files - set(cases))
+        summary["success"] = summary["success"] and actual_files == set(cases)
+    _atomic_write_json(ROOT / "logging" / "run_summary.json", summary)
+    write_metadata(run_id, mode="live_openai")
+    return summary
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group(required=True)
@@ -119,6 +168,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--hybrid",
         action="store_true",
         help="use all real domain agents and offline Policy/Verifier model doubles",
+    )
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="use OpenAI-backed Policy and Verifier agents",
     )
     parser.add_argument(
         "--concurrency",
@@ -143,21 +197,23 @@ def main() -> int:
             print(json.dumps(report, ensure_ascii=False, indent=2))
             return 0
         if args.batch:
-            if not args.hybrid or args.stub:
-                raise ValueError("--batch currently requires --hybrid")
+            if sum((args.stub, args.hybrid, args.live)) != 1 or args.stub:
+                raise ValueError("--batch requires exactly one of --hybrid or --live")
             result = asyncio.run(
-                run_hybrid_batch(
+                (run_live_batch if args.live else run_hybrid_batch)(
                     concurrency=args.concurrency,
                     write_output=args.write_output,
                 )
             )
             print(json.dumps(result, ensure_ascii=False, indent=2))
             return 0 if result["success"] else 1
-        if args.stub == args.hybrid:
-            raise ValueError("choose exactly one execution mode: --stub or --hybrid")
-        if args.write_output and not args.hybrid:
-            raise ValueError("--write-output is only supported with --hybrid")
-        if args.hybrid:
+        if sum((args.stub, args.hybrid, args.live)) != 1:
+            raise ValueError("choose exactly one execution mode: --stub, --hybrid, or --live")
+        if args.write_output and args.stub:
+            raise ValueError("--write-output is only supported with --hybrid or --live")
+        if args.live:
+            result = asyncio.run(run_live_case(args.case, write_output=args.write_output))
+        elif args.hybrid:
             result = asyncio.run(run_hybrid_case(args.case, write_output=args.write_output))
         else:
             result = asyncio.run(run_stub_case(args.case))

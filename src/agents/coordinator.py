@@ -40,8 +40,9 @@ class CoordinatorState(TypedDict, total=False):
 
 
 class CoordinatorAgent:
-    def __init__(self, runtime: AgentRuntime) -> None:
+    def __init__(self, runtime: AgentRuntime, *, stub: bool = True) -> None:
         self.runtime = runtime
+        self.stub = stub
         graph = StateGraph(CoordinatorState)
         graph.add_node("fan_out_domains", self._fan_out_domains)
         graph.add_node("invoke_policy", self._invoke_policy)
@@ -123,7 +124,7 @@ class CoordinatorAgent:
             "bundle": state["bundle"].model_dump(mode="json"),
             "decision": state["decision"].model_dump(mode="json"),
             "draft_output": state["draft_output"],
-            "stub": True,
+            "stub": self.stub,
         }
         envelope = self._envelope(state, "verifier_agent", "VERIFY_REQUEST", payload)
         raw = await self.runtime.invoke(envelope)
@@ -233,7 +234,7 @@ class CoordinatorAgent:
                 "bundle": state["bundle"].model_dump(mode="json"),
                 "decision": state["decision"].model_dump(mode="json"),
                 "draft_output": state["draft_output"],
-                "stub": True,
+                "stub": self.stub,
             },
             attempt=1,
         )
@@ -283,7 +284,7 @@ class CoordinatorAgent:
                 event="case_completed",
                 timestamp=datetime.now(timezone.utc),
                 status="succeeded" if verify.valid else "failed",
-                output_summary={"state": state, "stub": True},
+                output_summary={"state": state, "stub": self.stub},
             )
         )
         return CaseRunResult(
@@ -292,7 +293,7 @@ class CoordinatorAgent:
             correlation_id=correlation_id,
             state=state,
             verify_result=verify,
-            stub=True,
+            stub=self.stub,
             output_path=output_path,
             primary_issue=result["decision"].primary_issue,
         )
