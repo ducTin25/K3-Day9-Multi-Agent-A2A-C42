@@ -1,10 +1,10 @@
 {
-  "case_id": "EC_013",
+  "case_id": "EC_014",
   "opened_at": "2018-10-18T00:00:00-03:00",
   "customer_request": {
     "language": "vi",
-    "message": "Đơn hàng không được hoàn tất dù tôi đã thanh toán. Hãy kiểm tra và đề xuất xử lý.",
-    "claimed_order_id": "ee234bfd26ca588915483995d811c1d0"
+    "message": "Tôi thấy đơn hàng có nhiều dòng thanh toán và lo rằng mình bị thu trùng. Hãy đối soát giúp tôi.",
+    "claimed_order_id": "b93b079468bdf6a20fd54cf45d1e03b6"
   },
   "policy_version": "EC_POLICY_V1"
 }

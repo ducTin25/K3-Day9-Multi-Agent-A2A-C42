@@ -1,0 +1,18 @@
+{
+  "case_id": "EC_005",
+  "category": "unavailable-no-item",
+  "facts": {
+    "order_id": "9a31fd9d697e9670777501f720773fd9",
+    "order_status": "unavailable",
+    "delivered_carrier_at": null,
+    "delivered_customer_at": null,
+    "estimated_delivery_at": "2018-03-23T00:00:00",
+    "items": [],
+    "item_total_brl": "0.00",
+    "freight_total_brl": "0.00",
+    "evidence_ids": [
+      "order:9a31fd9d697e9670777501f720773fd9"
+    ]
+  }
+}
+

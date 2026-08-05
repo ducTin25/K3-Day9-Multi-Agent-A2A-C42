@@ -1,10 +1,10 @@
 {
-  "case_id": "EC_028",
+  "case_id": "EC_029",
   "opened_at": "2018-10-18T00:00:00-03:00",
   "customer_request": {
     "language": "vi",
-    "message": "Đơn hàng không được hoàn tất dù tôi đã thanh toán. Hãy kiểm tra và đề xuất xử lý.",
-    "claimed_order_id": "80f0181edc2f4a5bd3384a3c39a83cee"
+    "message": "Tôi cho rằng đơn hàng được giao trễ. Hãy kiểm tra nguyên nhân và quyền lợi phù hợp.",
+    "claimed_order_id": "5c932e0a181410b67c77daaed30991af"
   },
   "policy_version": "EC_POLICY_V1"
 }

@@ -1,0 +1,28 @@
+{
+  "case_id": "EC_003",
+  "category": "canceled",
+  "facts": {
+    "order_id": "71303d7e93b399f5bcd537d124c0bcfa",
+    "order_status": "canceled",
+    "delivered_carrier_at": null,
+    "delivered_customer_at": null,
+    "estimated_delivery_at": "2016-10-25T00:00:00",
+    "items": [
+      {
+        "order_item_id": 1,
+        "seller_id": "25e6ffe976bd75618accfe16cefcbd0d",
+        "shipping_limit_date": "2016-10-21T16:19:54",
+        "price_brl": "100.00",
+        "freight_brl": "9.34"
+      }
+    ],
+    "item_total_brl": "100.00",
+    "freight_total_brl": "9.34",
+    "evidence_ids": [
+      "order:71303d7e93b399f5bcd537d124c0bcfa",
+      "item:71303d7e93b399f5bcd537d124c0bcfa:1",
+      "seller:25e6ffe976bd75618accfe16cefcbd0d"
+    ]
+  }
+}
+
