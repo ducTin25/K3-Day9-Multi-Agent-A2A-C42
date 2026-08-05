@@ -12,8 +12,7 @@ from src.tools.output_tools import DraftAssemblyError, assemble_output
 from src.tools.policy_tools import evaluate_policy
 from src.tools.verification_tools import verify_output
 from src.tracing import TraceSink
-from tests.test_tv5_checkpoint3 import handoff
-from tests.test_tv5_checkpoint3 import bundle_for
+from tests.test_tv5_agents import cp3_bundle_for as bundle_for, handoff
 
 
 def decision_for(bundle: InvestigationBundle) -> PolicyDecision:

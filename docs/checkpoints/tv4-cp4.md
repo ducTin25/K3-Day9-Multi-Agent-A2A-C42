@@ -20,13 +20,13 @@ Không chỉnh sửa `docs/team-plan.md` trực tiếp để tránh xung đột 
 
 ## Artifacts bổ sung trong Checkpoint 4
 
-- `tests/test_delivery_cp4.py`: Bộ test suite audit tự động 50 file trong `output/`.
+- `tests/test_delivery_agent.py`: Bộ test suite audit tự động 50 file trong `output/`.
 - `docs/checkpoints/tv4-cp4.md`: Báo cáo Checkpoint 4 của TV4.
 
 ## Lệnh kiểm tra
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest tests/test_delivery_cp4.py
+.\.venv\Scripts\python.exe -m pytest tests/test_delivery_agent.py
 .\.venv\Scripts\python.exe -m pytest
 ```
 
