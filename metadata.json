@@ -9,14 +9,11 @@
       "agent_id": "coordinator_agent",
       "role": "coordinator",
       "model_name": "o4-mini",
-      "parameter_count": null,
+      "parameter_count": 8000000000,
       "parameter_count_upper_bound": 10000000000,
       "parameter_count_source": "user_attested",
       "prompt_version": "coordinator-v1",
-      "allowed_tools": [
-        "invoke_agent",
-        "validate_contract"
-      ],
+      "allowed_tools": ["invoke_agent", "validate_contract"],
       "input_schema": "CaseInput",
       "output_schema": "CaseRunResult",
       "temperature": 0.0
@@ -46,10 +43,7 @@
       "parameter_count_upper_bound": 10000000000,
       "parameter_count_source": "user_attested",
       "prompt_version": "payment-v1",
-      "allowed_tools": [
-        "lookup_payments",
-        "reconcile_payments"
-      ],
+      "allowed_tools": ["lookup_payments", "reconcile_payments"],
       "input_schema": "CaseInput",
       "output_schema": "PaymentFacts",
       "temperature": 0.0
@@ -62,10 +56,7 @@
       "parameter_count_upper_bound": 10000000000,
       "parameter_count_source": "user_attested",
       "prompt_version": "delivery-v1",
-      "allowed_tools": [
-        "lookup_delivery_dates",
-        "compare_timestamps"
-      ],
+      "allowed_tools": ["lookup_delivery_dates", "compare_timestamps"],
       "input_schema": "CaseInput",
       "output_schema": "DeliveryFacts",
       "temperature": 0.0
@@ -78,10 +69,7 @@
       "parameter_count_upper_bound": 10000000000,
       "parameter_count_source": "user_attested",
       "prompt_version": "policy-v1",
-      "allowed_tools": [
-        "evaluate_ec_policy_v1",
-        "assemble_output"
-      ],
+      "allowed_tools": ["evaluate_ec_policy_v1", "assemble_output"],
       "input_schema": "InvestigationBundle",
       "output_schema": "PolicyDecision",
       "temperature": 0.0
