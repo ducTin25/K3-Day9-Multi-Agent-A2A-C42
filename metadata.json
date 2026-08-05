@@ -9,7 +9,7 @@
       "agent_id": "coordinator_agent",
       "role": "coordinator",
       "model_name": "o4-mini",
-      "parameter_count": null,
+      "parameter_count": 8000000000,
       "parameter_count_upper_bound": 10000000000,
       "parameter_count_source": "user_attested",
       "prompt_version": "coordinator-v1",

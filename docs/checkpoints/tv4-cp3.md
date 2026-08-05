@@ -33,14 +33,13 @@ Không chỉnh sửa `docs/team-plan.md` trực tiếp để tránh xung đột 
 - `tests/fixtures/delivery/seller_late.json`
 - `tests/fixtures/delivery/logistics_late.json`
 - `tests/fixtures/delivery/missing_timestamp.json`
-- `tests/test_delivery.py`
 - `tests/test_delivery_agent.py`
 - `docs/checkpoints/tv4-cp3.md`
 
 ## Lệnh kiểm tra
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest tests/test_delivery.py tests/test_delivery_agent.py
+.\.venv\Scripts\python.exe -m pytest tests/test_delivery_agent.py
 .\.venv\Scripts\python.exe -m pytest
 ```
 
