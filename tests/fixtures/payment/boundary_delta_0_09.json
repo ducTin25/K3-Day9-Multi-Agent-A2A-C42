@@ -1,0 +1,29 @@
+{
+  "order_id": "42fdf880ba16b47b59251dd489d4441a",
+  "reference_order_total_brl": "100.00",
+  "payments": [
+    {
+      "payment_sequential": 1,
+      "payment_type": "credit_card",
+      "payment_installments": 1,
+      "payment_value_brl": "99.91"
+    }
+  ],
+  "expected_payment_facts": {
+    "order_id": "42fdf880ba16b47b59251dd489d4441a",
+    "payments": [
+      {
+        "payment_sequential": 1,
+        "payment_type": "credit_card",
+        "payment_installments": 1,
+        "payment_value_brl": "99.91"
+      }
+    ],
+    "payment_total_brl": "99.91",
+    "payment_count": 1,
+    "reconciliation_delta_brl": "0.09",
+    "is_reconciled": true,
+    "evidence_ids": ["payment:42fdf880ba16b47b59251dd489d4441a:1"]
+  },
+  "note": "Delta = 0.09 BRL, nam trong nguong sai so 0.10 BRL (README muc 4) -> is_reconciled=true."
+}
