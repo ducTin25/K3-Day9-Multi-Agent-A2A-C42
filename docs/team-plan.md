@@ -402,8 +402,8 @@ Phần này giúp mỗi người theo dõi xuyên suốt mà không phải đọ
 
 #### TV4 — Delivery
 
-- [ ] CP0: timestamp fixtures cho bốn nhánh.
-- [ ] CP1: delivery tools + comparator.
+- [x] CP0: timestamp fixtures cho bốn nhánh.
+- [x] CP1: delivery tools + comparator.
 - [ ] CP2: DeliveryAgent + prompt + structured output.
 - [ ] CP3: audit delivery/root cause cho representative cases.
 - [ ] CP4: xử lý toàn bộ lỗi delivery/timestamp.
