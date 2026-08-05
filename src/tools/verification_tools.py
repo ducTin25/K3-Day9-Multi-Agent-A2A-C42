@@ -13,6 +13,7 @@ from time import perf_counter
 from typing import Any, Callable, Mapping, Sequence
 
 from .audit import TraceEmitter, emit_tool_event
+from .policy_tools import PolicyEvaluationError, evaluate_policy
 
 MAX_MODEL_PARAMETERS = 10_000_000_000
 REQUIRED_AGENT_IDS = {
@@ -377,6 +378,103 @@ def verify_output(
     return result
 
 
+def _contract_error(code: str, path: str, message: str) -> dict[str, Any]:
+    """Build an error compatible with the shared VerifyError contract."""
+
+    return {
+        "code": code,
+        "path": path,
+        "message": message,
+        "repair_target": "policy_agent",
+    }
+
+
+def _normalized_contract_value(value: Any) -> Any:
+    model_dump = getattr(value, "model_dump", None)
+    if callable(model_dump):
+        return model_dump(mode="json")
+    if isinstance(value, Decimal):
+        return str(value.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+    if isinstance(value, Mapping):
+        return {key: _normalized_contract_value(item) for key, item in value.items()}
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return [_normalized_contract_value(item) for item in value]
+    return value
+
+
+def verify_policy_decision(
+    bundle: Any,
+    decision: Any,
+    *,
+    trace_emit: TraceEmitter | None = None,
+    trace_context: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Independently recompute policy and compare every contract field."""
+
+    started = perf_counter()
+    errors: list[dict[str, Any]] = []
+    try:
+        expected = evaluate_policy(bundle)
+    except PolicyEvaluationError as exc:
+        errors.append(
+            _contract_error(exc.code, "bundle", f"Cannot verify unresolved bundle: {exc}")
+        )
+        expected = None
+
+    actual = _normalized_contract_value(decision)
+    if not isinstance(actual, Mapping):
+        errors.append(_contract_error("VERIFY_DECISION_TYPE", "decision", "Decision must be an object"))
+    elif expected is not None:
+        normalized_expected = _normalized_contract_value(expected)
+        fields = (
+            "primary_issue",
+            "case_status",
+            "confidence",
+            "ranked_causes",
+            "responsible_parties",
+            "recommended_refund_brl",
+            "resolution_actions",
+            "policy_evidence_ids",
+        )
+        for field in fields:
+            expected_value = normalized_expected.get(field)
+            actual_value = actual.get(field)
+            if field == "recommended_refund_brl":
+                expected_money = _money(expected_value)
+                actual_money = _money(actual_value)
+                matches = expected_money is not None and expected_money == actual_money
+            else:
+                matches = expected_value == actual_value
+            if not matches:
+                errors.append(
+                    _contract_error(
+                        "VERIFY_POLICY_MISMATCH",
+                        f"decision.{field}",
+                        f"Expected {expected_value!r}, got {actual_value!r}",
+                    )
+                )
+
+    result = {"valid": not errors, "repairable": bool(errors), "errors": errors}
+    emit_tool_event(
+        trace_emit,
+        context=trace_context,
+        event_type="TOOL_COMPLETED",
+        stage="independent_verification",
+        agent_id="verifier_agent",
+        tool_name="verify_policy",
+        status="success" if result["valid"] else "rejected",
+        duration_ms=int((perf_counter() - started) * 1000),
+        input_value={"bundle": _normalized_contract_value(bundle), "decision": actual},
+        output_value=result,
+        error=None if result["valid"] else {"codes": [item["code"] for item in errors]},
+    )
+    return result
+
+
+# Name declared in the VerifierAgent tool allowlist.
+verify_policy = verify_policy_decision
+
+
 def _agent_configs(metadata: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     agents = metadata.get("agents")
     if isinstance(agents, Mapping):
@@ -412,18 +510,15 @@ def validate_metadata(metadata: Mapping[str, Any]) -> list[dict[str, Any]]:
         if not agent.get("model_name"):
             errors.append(_error("METADATA_MODEL_MISSING", f"{path}.model_name", "Model name is required", repair_target="coordinator_agent", repairable=False))
         count = agent.get("parameter_count")
-        if isinstance(count, bool) or not isinstance(count, int) or count <= 0:
-            errors.append(
-                _error(
-                    "MODEL_PARAMETER_COUNT_UNVERIFIED",
-                    f"{path}.parameter_count",
-                    f"{agent_id}: a positive, evidenced parameter count is required",
-                    actual=count,
-                    repair_target="coordinator_agent",
-                    repairable=False,
-                )
-            )
-        elif count > MAX_MODEL_PARAMETERS:
+        upper_bound = agent.get("parameter_count_upper_bound")
+        has_valid_count = isinstance(count, int) and not isinstance(count, bool) and 0 < count <= MAX_MODEL_PARAMETERS
+        has_valid_upper_bound = (
+            isinstance(upper_bound, int)
+            and not isinstance(upper_bound, bool)
+            and 0 < upper_bound <= MAX_MODEL_PARAMETERS
+            and agent.get("parameter_count_source") in {"official", "provider", "user_attested"}
+        )
+        if isinstance(count, int) and not isinstance(count, bool) and count > MAX_MODEL_PARAMETERS:
             errors.append(
                 _error(
                     "MODEL_PARAMETER_LIMIT_EXCEEDED",
@@ -431,6 +526,17 @@ def validate_metadata(metadata: Mapping[str, Any]) -> list[dict[str, Any]]:
                     f"{agent_id}: model exceeds the 10B limit",
                     expected=f"<= {MAX_MODEL_PARAMETERS}",
                     actual=count,
+                    repair_target="coordinator_agent",
+                    repairable=False,
+                )
+            )
+        elif not has_valid_count and not has_valid_upper_bound:
+            errors.append(
+                _error(
+                    "MODEL_PARAMETER_COUNT_UNVERIFIED",
+                    f"{path}.parameter_count",
+                    f"{agent_id}: a positive, evidenced parameter count is required",
+                    actual={"parameter_count": count, "parameter_count_upper_bound": upper_bound},
                     repair_target="coordinator_agent",
                     repairable=False,
                 )

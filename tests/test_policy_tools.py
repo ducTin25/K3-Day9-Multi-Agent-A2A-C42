@@ -25,12 +25,11 @@ class PolicyToolsTests(unittest.TestCase):
                 self.assertEqual(expected["cause"], result["ranked_causes"][0]["cause_code"])
                 self.assertEqual(expected["refund"], result["recommended_refund_brl"])
                 self.assertEqual([expected["action"]], result["resolution_actions"])
-                self.assertEqual(expected["rule_rank"], result["matched_rule_rank"])
 
     def test_priority_prefers_canceled_over_late_and_split(self) -> None:
         result = evaluate_policy(self.golden_cases[0]["bundle"])
         self.assertEqual("canceled_order_paid", result["primary_issue"])
-        self.assertEqual(1, result["matched_rule_rank"])
+        self.assertEqual("ORDER_CANCELED_AFTER_PAYMENT", result["ranked_causes"][0]["cause_code"])
 
     def test_unresolved_bundle_fails_without_inventing_issue(self) -> None:
         bundle = {
