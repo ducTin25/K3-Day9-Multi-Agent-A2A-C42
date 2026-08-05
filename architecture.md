@@ -1,68 +1,207 @@
 # Multi-Agent Architecture — E-commerce Dispute Resolution
 
-## Architecture summary
+## 1. Phạm vi kiến trúc thực tế
 
-Hệ thống gồm 6 logical agent độc lập, mỗi agent có model `<=10B`, system prompt, context, tool allowlist và structured output schema riêng:
+Hệ thống xử lý 50 khiếu nại Olist bằng sáu **logical runtime unit** được đăng ký trong `AgentRuntime`:
 
-1. `CoordinatorAgent`: điều phối và route handoff, không đọc CSV hoặc tự quyết nghiệp vụ.
-2. `OrderSellerAgent`: điều tra order, item, seller và shipping limit.
-3. `PaymentAgent`: điều tra payment và financial reconciliation.
-4. `DeliveryAgent`: xác định giao trễ và seller/logistics handoff.
-5. `PolicyAgent`: áp dụng `EC_POLICY_V1` theo đúng thứ tự ưu tiên.
-6. `VerifierAgent`: kiểm độc lập schema, evidence, financial resolution và policy trước khi ghi output.
+1. `CoordinatorAgent`: điều phối flow và quản lý state; không đọc CSV và không chứa policy rule.
+2. `OrderSellerAgent`: đọc order/item/seller và tổng hợp `OrderSellerFacts` bằng deterministic tools.
+3. `PaymentAgent`: đọc payment rows, tính tổng và reconciliation bằng deterministic tools.
+4. `DeliveryAgent`: so sánh timestamp và phân loại seller/logistics bằng deterministic tools.
+5. `PolicyAgent`: áp dụng `EC_POLICY_V1`, sau đó đối chiếu structured model output với kết quả deterministic authoritative.
+6. `VerifierAgent`: recompute policy, kiểm draft và đối chiếu structured model output với kết quả deterministic authoritative.
 
-Thiết kế, schema, sequence, state machine, repair flow và trace contract đầy đủ nằm tại [docs/multi-agent-flow.md](docs/multi-agent-flow.md).
+Trong `--live` mode, chỉ `PolicyAgent` và `VerifierAgent` tạo hai OpenAI model client/context độc lập. Coordinator và ba domain agent là logical agent chạy bằng Python/tool có prompt, allowlist và Pydantic output contract nhưng **không gọi model**. Trong `--hybrid` mode, Policy/Verifier dùng offline authoritative echo invoker để kiểm tra integration mà không gọi API.
 
-Trước agent runtime, task deterministic `DP-01` validate raw CSV, chuẩn hóa kiểu dữ liệu, lọc/index các row thuộc 50 order và tạo processed case index read-only. DP-01 không đưa ra kết luận nghiệp vụ; các domain agent vẫn chịu trách nhiệm điều tra và handoff. Chi tiết task và checkpoint nằm trong [docs/team-plan.md](docs/team-plan.md).
+Model cấu hình hiện tại là `o4-mini`. `src/config/agents.yaml` khai báo sáu logical agent và upper bound `10,000,000,000` parameters theo nguồn `user_attested`; đây là metadata/config guard của nhóm, không phải parameter count chính thức do provider công bố.
+
+## 2. Thành phần và data flow
 
 ```mermaid
-flowchart LR
-    I["CaseInput"] --> C["CoordinatorAgent <=10B"]
-    C --> OS["OrderSellerAgent <=10B"]
-    C --> P["PaymentAgent <=10B"]
-    C --> D["DeliveryAgent <=10B"]
-    OS --> C
-    P --> C
-    D --> C
-    C --> Y["PolicyAgent <=10B"]
-    Y --> C
-    C --> V["VerifierAgent <=10B"]
-    V -->|"valid"| O["Atomic output writer"]
-    V -->|"repairable, max 1 round"| C
+flowchart TD
+    I["50 CaseInput JSON"] --> PF["Preflight"]
+    CSV["Raw Olist CSV"] --> DP["DP-01 processed index"]
+    PF --> B["Batch runner, concurrency 1-16"]
+    B --> C["CoordinatorAgent"]
+
+    C -->|"TASK_REQUEST"| OS["OrderSellerAgent, deterministic"]
+    C -->|"TASK_REQUEST"| PA["PaymentAgent, deterministic"]
+    C -->|"TASK_REQUEST"| DA["DeliveryAgent, deterministic"]
+    DP --> OS
+    CSV --> PA
+    CSV --> DA
+
+    OS -->|"OrderSellerFacts payload"| C
+    PA -->|"PaymentFacts payload"| C
+    DA -->|"DeliveryFacts payload"| C
+    C --> IB["InvestigationBundle"]
+    IB -->|"POLICY_REQUEST"| PY["PolicyAgent, OpenAI in live mode"]
+    PY -->|"PolicyDecision payload"| C
+    C --> AS["Deterministic draft assembler"]
+    AS -->|"bundle + decision + draft"| V["VerifierAgent, OpenAI in live mode"]
+    V -->|"VerifyResult payload"| C
+    C -->|"valid=true"| W["AtomicOutputWriter"]
+    W --> O["output/EC_NNN.json"]
+    V -->|"repairable, attempt=0"| R["Targeted repair, max one round"]
+    R --> C
 ```
 
-## Agent permissions
+### Preflight và DP-01
 
-| Agent | Read access | Tools | Write access |
+- `src.preflight.run_preflight` kiểm đúng 50 case `EC_001`–`EC_050`, case ID trùng/thiếu và order ID có tồn tại trong orders CSV.
+- `scripts/preprocess_data.py` là task offline tạo `data/processed/olist_case_index.sqlite` và manifest read-only.
+- Live runner không tự chạy lại preprocessing; nó sử dụng raw CSV và processed artifact đang có trong workspace.
+- `OrderSellerAgent` dùng repository adapter; Payment và Delivery hiện gọi deterministic CSV tools theo domain của mình.
+
+## 3. Chế độ chạy
+
+| Mode | Domain handlers | Policy/Verifier | Ghi output |
 | --- | --- | --- | --- |
-| Coordinator | Case và structured handoff | invoke agent, validate contract | Trace event qua runtime |
-| OrderSeller | Orders, items, sellers | lookup và deterministic aggregation | Không |
-| Payment | Payments và totals cần đối soát | lookup, Decimal sum/reconcile | Không |
-| Delivery | Order delivery timestamps, item shipping limits | lookup, timestamp comparison | Không |
-| Policy | Investigation bundle, policy definition | priority evaluator, refund calculator | Không |
-| Verifier | Draft và read-only evidence lookup | schema/evidence/finance/policy checks | Không |
+| `--stub` | Contract-safe stubs | Stubs | Không hỗ trợ |
+| `--hybrid` | OrderSeller, Payment, Delivery thật | Offline authoritative echo | Có khi dùng `--write-output` |
+| `--live` | OrderSeller, Payment, Delivery thật | Hai OpenAI structured-output clients độc lập | Có khi dùng `--write-output` |
 
-Chỉ runtime writer được ghi `output/`, và chỉ sau `VERIFY_RESULT.valid=true`.
+Lệnh live batch chính:
 
-## Handoff flow
+```powershell
+.\.venv\Scripts\python.exe -m src.runner --batch --live --write-output --concurrency 2
+```
 
-Mọi A2A message dùng envelope gồm `run_id`, `case_id`, `correlation_id`, `sender`, `receiver`, `message_type`, `attempt`, `payload` và `evidence_ids`.
+Batch runner dùng `asyncio.Semaphore`; concurrency hợp lệ từ 1 đến 16. Một case lỗi được cô lập, ghi terminal failure và không dừng các case còn lại.
 
-1. Coordinator fan-out ba `TASK_REQUEST` độc lập tới OrderSeller, Payment và Delivery.
-2. Ba domain agent gọi tool read-only và trả `FACT_RESPONSE` có schema.
-3. Coordinator fan-in, validate và đóng băng `InvestigationBundle`.
-4. Policy nhận `POLICY_REQUEST`, trả `DECISION_RESPONSE`.
-5. Verifier nhận `VERIFY_REQUEST`, kiểm độc lập và trả `VERIFY_RESULT`.
-6. Nếu hợp lệ, runtime atomic-write `output/<case_id>.json`.
-7. Nếu repairable, Coordinator gửi lỗi về đúng agent, tối đa một vòng, rồi chạy lại Policy và Verifier.
-8. Nếu vẫn sai hoặc non-repairable, case fail và không sinh output giả.
+## 4. Quyền truy cập thực tế
 
-## Model constraint
+| Logical unit | Read access | Allowed operations | Model call | Write access |
+| --- | --- | --- | --- | --- |
+| Coordinator | Case và validated payload trong state | Invoke handler, fan-in, route repair | Không | Emit trace; gọi writer sau verify |
+| OrderSeller | Order, item, seller repository | Lookup và deterministic aggregation | Không | Không |
+| Payment | Payment và order financial reference | Lookup, Decimal sum, reconciliation | Không | Không |
+| Delivery | Delivery timestamps và shipping limits | Lookup và timestamp comparison | Không | Không |
+| Policy | `InvestigationBundle`, policy definition | Policy evaluator và draft assembly interface | Có trong live mode | Không ghi output |
+| Verifier | Bundle, decision và draft | Policy/schema/evidence-format/financial checks | Có trong live mode | Không |
+| Atomic writer | Draft đã verify | JSON Schema validation, temp file và `os.replace` | Không | Chỉ `output/` |
 
-Startup guard kiểm `model_name`, `parameter_count`, prompt version, allowed tools và fallback của từng agent. Run dừng trước khi đọc case nếu bất kỳ model/fallback nào vượt `10,000,000,000` parameters hoặc thiếu parameter metadata. `metadata.json` ghi cấu hình riêng cho cả 6 agent.
+Verifier hiện kiểm định dạng evidence và tính nhất quán policy/financial. `verify_output` có hỗ trợ callback `evidence_lookup`, nhưng live `VerifierAgent` chưa inject callback này; vì vậy kiểm tra evidence tồn tại trong raw data hiện được thực hiện bằng auditor độc lập `scripts/audit_outputs.py`, không phải trong live verification path.
 
-## Audit and verification
+## 5. Contract và handoff
 
-Mỗi run có thư mục bất biến `logging/runs/<run_id>/` chứa trace, case summary, errors, verifier feedback, metrics và config snapshot để so sánh/cải tiến. Root `trace.jsonl` chỉ là bản sanitized của run được promote và luôn bị thay thế nguyên file để đúng yêu cầu nộp bài. Thiết kế observability đầy đủ nằm tại [docs/observability-and-improvement.md](docs/observability-and-improvement.md).
+### Request contract
 
-Trace phải chứng minh invocation và handoff thật: sender/receiver, model, parameter count, prompt version, tool calls, evidence IDs, attempt, duration và verify result. Một case thành công phải có invocation độc lập của Coordinator, ba domain agent, Policy và Verifier; một model call duy nhất không được xem là multi-agent.
+Mọi request do Coordinator gửi qua runtime dùng `HandoffEnvelope`:
+
+```text
+schema_version, run_id, case_id, correlation_id,
+sender, receiver, message_type, attempt, payload, evidence_ids
+```
+
+Các request đang được sử dụng:
+
+- `TASK_REQUEST` tới ba domain agent.
+- `POLICY_REQUEST` tới PolicyAgent.
+- `VERIFY_REQUEST` tới VerifierAgent.
+
+### Response contract
+
+Handler trả trực tiếp dictionary đã/được validate thành Pydantic model tương ứng:
+
+- `OrderSellerFacts`
+- `PaymentFacts`
+- `DeliveryFacts`
+- `PolicyDecision`
+- `VerifyResult`
+
+Các response hiện **không được bọc lại trong `HandoffEnvelope`**. Các enum `FACT_RESPONSE`, `DECISION_RESPONSE`, `VERIFY_RESULT` và `REPAIR_REQUEST` có trong shared contract để mở rộng, nhưng runtime hiện chưa dùng chúng làm response envelope.
+
+## 6. Policy, draft và verification
+
+### Policy
+
+`PolicyAgent` nhận immutable bundle và gọi deterministic `evaluate_ec_policy_v1`. OpenAI structured output phải bằng authoritative `PolicyDecision`; nếu khác, invocation fail thay vì chấp nhận model hallucination.
+
+### Draft assembly
+
+`assemble_tv5_draft` gọi deterministic `assemble_output` để:
+
+- kiểm facts của ba domain cùng order ID;
+- tạo affected entities ổn định và giới hạn theo schema;
+- tổng hợp policy/domain evidence tối đa 10 ID;
+- chuẩn hóa item, freight, payment và refund về hai chữ số;
+- tạo final draft mà không ghi filesystem.
+
+### Verification
+
+Verifier thực hiện hai deterministic checks:
+
+1. Recompute `PolicyDecision` từ bundle và so từng field.
+2. Kiểm cấu trúc draft, enum/list limits, evidence format, issue/cause/party/action mapping và financial/refund consistency.
+
+OpenAI `VerifierAgent` phải trả đúng authoritative `VerifyResult`. Chỉ `valid=true` mới cho phép writer ghi file.
+
+## 7. Retry và targeted repair
+
+Runtime retry tối đa một lần cho lỗi tạm thời thuộc `TimeoutError`, `ConnectionError` hoặc `OSError`. Contract/model disagreement không được retry như lỗi mạng.
+
+Nếu Verifier trả lỗi repairable ở attempt 0:
+
+1. Coordinator đọc `errors[*].repair_target`.
+2. Với domain target, Coordinator gửi lại `TASK_REQUEST` có thêm `repair_errors`, `attempt=1` chỉ tới domain cần sửa.
+3. Với policy target, ba domain agent không chạy lại.
+4. Coordinator rebuild bundle khi domain facts thay đổi.
+5. Policy, draft assembly và Verifier luôn chạy lại với `attempt=1`.
+6. Không có vòng repair thứ hai.
+
+Implementation hiện không gửi message type `REPAIR_REQUEST`; repair domain dùng `TASK_REQUEST` kèm `repair_errors`.
+
+## 8. Atomic output
+
+`AtomicOutputWriter` chỉ ghi khi:
+
+- `VerifyResult.valid=true`;
+- `case_id` trong draft khớp case yêu cầu;
+- draft pass JSON Schema 2020-12.
+
+Writer ghi vào temporary file trong cùng thư mục, flush + `fsync`, sau đó dùng `os.replace`. Batch được xem là thành công khi đạt:
+
+```text
+50 received = 50 verified = 50 written = 50 terminal
+```
+
+## 9. Trace, metadata và run summary hiện tại
+
+Implementation hiện lưu artifact của **lần chạy gần nhất**, không có immutable per-run history:
+
+| Artifact | Nội dung |
+| --- | --- |
+| `trace.jsonl` | Trace latest invocation; `TraceSink(reset=True)` thay nguyên file khi bắt đầu run |
+| `metadata.json` | Snapshot config sáu logical agent và run ID |
+| `logging/run_summary.json` | Batch counters, results, errors và primary issue counts |
+
+`TraceEvent` hiện có run/case/correlation ID, agent, sender/receiver, attempt, duration, status, evidence IDs, output summary và error. Model name, parameter metadata và prompt version **không nằm trên từng trace event**; chúng nằm trong `metadata.json`.
+
+Hệ thống hiện chưa tạo `logging/runs/<run_id>/`, chưa có bước promote run và chưa emit response envelope riêng. `scripts/summarize_run.py`/`compare_runs.py` là reporting skeleton cho cấu trúc run history tương lai, không phải storage path mà runner hiện đang tạo.
+
+### Quy tắc vận hành artifact nộp bài
+
+`trace.jsonl`, `metadata.json`, `logging/run_summary.json` và 50 output phải có cùng run ID/ngữ cảnh. Một số test/integration command có thể khởi tạo `TraceSink` ở root và làm thay trace mới nhất. Vì vậy quy trình an toàn là:
+
+1. Chạy toàn bộ test trước.
+2. Chạy live batch cuối cùng.
+3. Kiểm run ID giữa trace, metadata và summary.
+4. Không chạy lệnh có thể ghi root trace sau lần live cuối.
+
+Lệnh kiểm run ID:
+
+```powershell
+.\.venv\Scripts\python.exe -c "import json; from pathlib import Path; m=json.loads(Path('metadata.json').read_text()); s=json.loads(Path('logging/run_summary.json').read_text()); t={json.loads(x)['run_id'] for x in Path('trace.jsonl').read_text().splitlines() if x.strip()}; print(m['run_id'], s['run_id'], t)"
+```
+
+## 10. Giới hạn đã biết
+
+- Chỉ PolicyAgent và VerifierAgent là model-backed trong live mode.
+- Response là structured payload, chưa phải response `HandoffEnvelope`.
+- Evidence existence lookup chưa được inject vào live Verifier.
+- Không có immutable per-run history/promotion.
+- Trace event không lặp lại model/parameter/prompt metadata.
+- Parameter limit của `o4-mini` đang dựa trên `user_attested` upper bound trong config.
+
+Các giới hạn trên được ghi rõ để tài liệu phản ánh đúng code đang chạy, không mô tả capability chưa được triển khai.

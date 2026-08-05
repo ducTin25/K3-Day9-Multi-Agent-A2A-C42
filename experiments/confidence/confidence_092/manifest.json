@@ -1,0 +1,259 @@
+{
+  "candidate": "confidence_092",
+  "confidence": 0.92,
+  "file_count": 50,
+  "only_field_changed": "assessment.confidence",
+  "zip": "confidence_092.zip",
+  "changes": [
+    {
+      "file": "EC_001.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_002.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_003.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_004.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_005.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_006.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_007.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_008.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_009.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_010.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_011.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_012.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_013.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_014.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_015.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_016.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_017.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_018.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_019.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_020.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_021.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_022.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_023.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_024.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_025.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_026.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_027.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_028.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_029.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_030.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_031.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_032.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_033.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_034.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_035.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_036.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_037.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_038.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_039.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_040.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_041.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_042.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_043.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_044.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_045.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_046.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_047.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_048.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_049.json",
+      "from": 1.0,
+      "to": 0.92
+    },
+    {
+      "file": "EC_050.json",
+      "from": 1.0,
+      "to": 0.92
+    }
+  ]
+}

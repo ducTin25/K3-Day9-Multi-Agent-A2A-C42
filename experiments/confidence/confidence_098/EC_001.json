@@ -1,0 +1,53 @@
+{
+  "affected_entities": {
+    "item_ids": [
+      "e2a03ccf5ea816036608b2d8c3ab8e60:1"
+    ],
+    "order_ids": [
+      "e2a03ccf5ea816036608b2d8c3ab8e60"
+    ],
+    "payment_ids": [
+      "e2a03ccf5ea816036608b2d8c3ab8e60:1"
+    ],
+    "seller_ids": [
+      "f7496d659ca9fdaf323c0aae84176632"
+    ]
+  },
+  "assessment": {
+    "case_status": "action_required",
+    "confidence": 0.98,
+    "primary_issue": "late_delivery_seller"
+  },
+  "case_id": "EC_001",
+  "evidence_ids": [
+    "policy:SELLER_HANDOFF_AFTER_LIMIT",
+    "item:e2a03ccf5ea816036608b2d8c3ab8e60:1",
+    "order:e2a03ccf5ea816036608b2d8c3ab8e60",
+    "payment:e2a03ccf5ea816036608b2d8c3ab8e60:1",
+    "seller:f7496d659ca9fdaf323c0aae84176632"
+  ],
+  "financial_resolution": {
+    "currency": "BRL",
+    "freight_total_brl": 12.04,
+    "item_total_brl": 119.9,
+    "payment_total_brl": 131.94,
+    "recommended_refund_brl": 12.04
+  },
+  "resolution_actions": [
+    "refund_freight"
+  ],
+  "root_cause_analysis": {
+    "ranked_causes": [
+      {
+        "cause_code": "SELLER_HANDOFF_AFTER_LIMIT",
+        "rank": 1
+      }
+    ],
+    "responsible_parties": [
+      {
+        "party_id": "f7496d659ca9fdaf323c0aae84176632",
+        "party_type": "seller"
+      }
+    ]
+  }
+}

@@ -1,0 +1,777 @@
+{
+  "audit_version": "independent-raw-csv-v1",
+  "disclaimer": "Proxy score; hidden grader confidence/evidence formulas are unknown.",
+  "case_count": 50,
+  "output_count": 50,
+  "missing_files": [],
+  "proxy_average": 100.0,
+  "category_average": {
+    "assessment": 20.0,
+    "affected_entities": 20.0,
+    "root_cause": 15.0,
+    "evidence": 15.0,
+    "financial": 20.0,
+    "actions": 10.0
+  },
+  "finding_counts": {},
+  "confidence_audit": {
+    "unique_values": [
+      1.0
+    ],
+    "all_identical": true,
+    "extreme_one_count": 50,
+    "risk": "Hidden grader may reward calibrated confidence; run one-variable A/B candidates."
+  },
+  "cases": [
+    {
+      "case_id": "EC_001",
+      "file": "EC_001.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_002",
+      "file": "EC_002.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_003",
+      "file": "EC_003.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_004",
+      "file": "EC_004.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_005",
+      "file": "EC_005.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_006",
+      "file": "EC_006.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_007",
+      "file": "EC_007.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_008",
+      "file": "EC_008.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_009",
+      "file": "EC_009.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_010",
+      "file": "EC_010.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_011",
+      "file": "EC_011.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_012",
+      "file": "EC_012.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_013",
+      "file": "EC_013.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_014",
+      "file": "EC_014.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_015",
+      "file": "EC_015.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_016",
+      "file": "EC_016.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_017",
+      "file": "EC_017.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_018",
+      "file": "EC_018.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_019",
+      "file": "EC_019.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_020",
+      "file": "EC_020.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_021",
+      "file": "EC_021.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_022",
+      "file": "EC_022.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_023",
+      "file": "EC_023.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_024",
+      "file": "EC_024.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_025",
+      "file": "EC_025.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_026",
+      "file": "EC_026.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_027",
+      "file": "EC_027.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_028",
+      "file": "EC_028.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_029",
+      "file": "EC_029.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_030",
+      "file": "EC_030.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_031",
+      "file": "EC_031.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_032",
+      "file": "EC_032.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_033",
+      "file": "EC_033.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_034",
+      "file": "EC_034.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_035",
+      "file": "EC_035.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_036",
+      "file": "EC_036.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_037",
+      "file": "EC_037.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_038",
+      "file": "EC_038.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_039",
+      "file": "EC_039.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_040",
+      "file": "EC_040.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_041",
+      "file": "EC_041.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_042",
+      "file": "EC_042.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_043",
+      "file": "EC_043.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_044",
+      "file": "EC_044.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_045",
+      "file": "EC_045.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_046",
+      "file": "EC_046.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_047",
+      "file": "EC_047.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_048",
+      "file": "EC_048.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_049",
+      "file": "EC_049.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "EC_050",
+      "file": "EC_050.json",
+      "proxy_score": 100.0,
+      "category_scores": {
+        "assessment": 20.0,
+        "affected_entities": 20.0,
+        "root_cause": 15.0,
+        "evidence": 15.0,
+        "financial": 20.0,
+        "actions": 10.0
+      },
+      "findings": [],
+      "confidence": 1.0
+    }
+  ]
+}

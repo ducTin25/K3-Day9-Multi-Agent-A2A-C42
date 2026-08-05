@@ -1,0 +1,53 @@
+{
+  "affected_entities": {
+    "item_ids": [
+      "2c0032906c603dcc21cd954828fa77d0:1"
+    ],
+    "order_ids": [
+      "2c0032906c603dcc21cd954828fa77d0"
+    ],
+    "payment_ids": [
+      "2c0032906c603dcc21cd954828fa77d0:1"
+    ],
+    "seller_ids": [
+      "c1ed9e3daf6154542826a6996af0fb8c"
+    ]
+  },
+  "assessment": {
+    "case_status": "action_required",
+    "confidence": 0.92,
+    "primary_issue": "canceled_order_paid"
+  },
+  "case_id": "EC_008",
+  "evidence_ids": [
+    "policy:ORDER_CANCELED_AFTER_PAYMENT",
+    "item:2c0032906c603dcc21cd954828fa77d0:1",
+    "order:2c0032906c603dcc21cd954828fa77d0",
+    "payment:2c0032906c603dcc21cd954828fa77d0:1",
+    "seller:c1ed9e3daf6154542826a6996af0fb8c"
+  ],
+  "financial_resolution": {
+    "currency": "BRL",
+    "freight_total_brl": 36.82,
+    "item_total_brl": 213.75,
+    "payment_total_brl": 250.57,
+    "recommended_refund_brl": 250.57
+  },
+  "resolution_actions": [
+    "issue_full_refund"
+  ],
+  "root_cause_analysis": {
+    "ranked_causes": [
+      {
+        "cause_code": "ORDER_CANCELED_AFTER_PAYMENT",
+        "rank": 1
+      }
+    ],
+    "responsible_parties": [
+      {
+        "party_id": "OLIST_PLATFORM",
+        "party_type": "platform"
+      }
+    ]
+  }
+}

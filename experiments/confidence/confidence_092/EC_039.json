@@ -1,0 +1,48 @@
+{
+  "affected_entities": {
+    "item_ids": [
+      "44a03ff139461361ec4cce7949663c2f:1"
+    ],
+    "order_ids": [
+      "44a03ff139461361ec4cce7949663c2f"
+    ],
+    "payment_ids": [
+      "44a03ff139461361ec4cce7949663c2f:1"
+    ],
+    "seller_ids": [
+      "da8622b14eb17ae2831f4ac5b9dab84a"
+    ]
+  },
+  "assessment": {
+    "case_status": "no_action",
+    "confidence": 0.92,
+    "primary_issue": "unsupported_late_claim"
+  },
+  "case_id": "EC_039",
+  "evidence_ids": [
+    "policy:DELIVERY_WITHIN_ESTIMATE",
+    "item:44a03ff139461361ec4cce7949663c2f:1",
+    "order:44a03ff139461361ec4cce7949663c2f",
+    "payment:44a03ff139461361ec4cce7949663c2f:1",
+    "seller:da8622b14eb17ae2831f4ac5b9dab84a"
+  ],
+  "financial_resolution": {
+    "currency": "BRL",
+    "freight_total_brl": 9.29,
+    "item_total_brl": 79.9,
+    "payment_total_brl": 89.19,
+    "recommended_refund_brl": 0.0
+  },
+  "resolution_actions": [
+    "reject_late_refund"
+  ],
+  "root_cause_analysis": {
+    "ranked_causes": [
+      {
+        "cause_code": "DELIVERY_WITHIN_ESTIMATE",
+        "rank": 1
+      }
+    ],
+    "responsible_parties": []
+  }
+}
