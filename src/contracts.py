@@ -252,3 +252,4 @@ class CaseRunResult(StrictModel):
     verify_result: VerifyResult
     stub: bool = True
     output_path: str | None = None
+    primary_issue: str | None = None

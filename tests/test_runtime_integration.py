@@ -10,6 +10,7 @@ from src.agents.coordinator import CoordinatorAgent
 from src.agents.order_seller import OrderSellerAgent
 from src.agents.payment import PaymentAgent
 from src.agents.registry import build_hybrid_handlers
+from src.agents.stubs import stub_handlers
 from src.contracts import HandoffEnvelope
 from src.preflight import run_preflight
 from src.runtime import AgentRuntime
@@ -110,3 +111,91 @@ def test_hybrid_flow_can_atomically_write_only_verified_draft(tmp_path: Path) ->
     output_path = Path(result.output_path)
     assert output_path.name == "EC_001.json"
     assert json.loads(output_path.read_text(encoding="utf-8"))["case_id"] == "EC_001"
+
+
+@pytest.mark.parametrize("repair_target", ["payment_agent", "policy_agent"])
+def test_coordinator_repairs_only_target_then_reruns_policy_and_verifier(
+    tmp_path: Path, repair_target: str
+) -> None:
+    cases, _ = run_preflight(ROOT)
+    originals = stub_handlers()
+    calls: dict[str, list[int]] = {name: [] for name in originals}
+    handlers = {}
+
+    for name, original in originals.items():
+        async def tracked(envelope: HandoffEnvelope, *, _name=name, _handler=original) -> dict:
+            calls[_name].append(envelope.attempt)
+            return await _handler(envelope)
+
+        handlers[name] = tracked
+
+    verifier_calls = 0
+
+    async def rejecting_once(envelope: HandoffEnvelope) -> dict:
+        nonlocal verifier_calls
+        calls["verifier_agent"].append(envelope.attempt)
+        verifier_calls += 1
+        if verifier_calls == 1:
+            return {
+                "valid": False,
+                "repairable": True,
+                "errors": [
+                    {
+                        "code": "INJECTED_REPAIRABLE",
+                        "message": "injected repair scenario",
+                        "repair_target": repair_target,
+                        "repairable": True,
+                    }
+                ],
+            }
+        return {"valid": True, "repairable": False, "errors": []}
+
+    handlers["verifier_agent"] = rejecting_once
+    trace_path = tmp_path / "trace.jsonl"
+    trace = TraceSink(trace_path)
+    runtime = AgentRuntime(trace, handlers)
+    result = asyncio.run(
+        CoordinatorAgent(runtime).run_stub(cases["EC_001"], "repair-isolation-test")
+    )
+    assert result.state == "VERIFIED"
+    assert calls["order_seller_agent"] == ([0] if repair_target != "order_seller_agent" else [0, 1])
+    assert calls["payment_agent"] == ([0, 1] if repair_target == "payment_agent" else [0])
+    assert calls["delivery_agent"] == [0]
+    assert calls["policy_agent"] == [0, 1]
+    assert calls["verifier_agent"] == [0, 1]
+    events = read_events(trace_path)
+    repair_event = next(event for event in events if event["event"] == "repair_started")
+    assert repair_event["output_summary"]["repair_targets"] == [repair_target]
+
+
+def test_six_real_representative_cases_verify_and_write(tmp_path: Path) -> None:
+    expected = {
+        "EC_003": "canceled_order_paid",
+        "EC_005": "unavailable_order_paid",
+        "EC_001": "late_delivery_seller",
+        "EC_009": "late_delivery_logistics",
+        "EC_004": "valid_split_payment",
+        "EC_002": "unsupported_late_claim",
+    }
+    cases, _ = run_preflight(ROOT)
+    trace = TraceSink(tmp_path / "trace.jsonl")
+    runtime = AgentRuntime(trace, build_hybrid_handlers(trace))
+    coordinator = CoordinatorAgent(runtime)
+    writer = AtomicOutputWriter(tmp_path / "output")
+
+    async def run_all() -> list:
+        results = []
+        for case_id in expected:
+            results.append(
+                await coordinator.run_stub(
+                    cases[case_id], "representative-cases", writer=writer
+                )
+            )
+        return results
+
+    results = asyncio.run(run_all())
+    assert {result.case_id: result.primary_issue for result in results} == expected
+    assert all(result.state == "VERIFIED" for result in results)
+    assert sorted(path.name for path in (tmp_path / "output").glob("*.json")) == sorted(
+        f"{case_id}.json" for case_id in expected
+    )

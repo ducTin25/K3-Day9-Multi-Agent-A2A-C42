@@ -32,7 +32,8 @@ class AgentRuntime:
     async def invoke(self, envelope: HandoffEnvelope) -> dict[str, Any]:
         if envelope.receiver not in self.handlers:
             raise KeyError(f"no handler registered for {envelope.receiver}")
-        for retry in range(self.max_retries + 1):
+        retries_available = min(self.max_retries, max(0, 1 - envelope.attempt))
+        for retry in range(retries_available + 1):
             attempt_envelope = envelope.model_copy(update={"attempt": envelope.attempt + retry})
             started = time.perf_counter()
             self._trace(attempt_envelope, "invocation_started", "started")
@@ -52,7 +53,7 @@ class AgentRuntime:
                     summary={"error_type": error_type},
                     error=str(exc),
                 )
-                if retry >= self.max_retries or not self._is_retryable(exc):
+                if retry >= retries_available or not self._is_retryable(exc):
                     raise
                 self._trace(
                     attempt_envelope,
