@@ -1,0 +1,15 @@
+{
+  "order_id": "25e8ea4e93396b6fa0d3dd708e76c1bd",
+  "reference_order_total_brl": "0.00",
+  "payments": [],
+  "expected_payment_facts": {
+    "order_id": "25e8ea4e93396b6fa0d3dd708e76c1bd",
+    "payments": [],
+    "payment_total_brl": "0.00",
+    "payment_count": 0,
+    "reconciliation_delta_brl": "0.00",
+    "is_reconciled": true,
+    "evidence_ids": []
+  },
+  "note": "Khong co payment row nao (vd order chua tung phat sinh thanh toan). evidence_ids phai rong vi khong co payment:<order_id>:<seq> nao dung tu du lieu that."
+}
