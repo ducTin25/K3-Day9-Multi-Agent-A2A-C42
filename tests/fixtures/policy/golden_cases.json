@@ -1,0 +1,62 @@
+[
+  {
+    "name": "canceled paid has highest priority",
+    "bundle": {
+      "policy_version": "EC_POLICY_V1",
+      "order_seller": {"order_status": "canceled", "freight_total_brl": "15.00"},
+      "payment": {"payment_total_brl": "115.00", "payment_count": 2, "is_reconciled_within_0_10": true},
+      "delivery": {"is_delivered_late": true, "seller_handoff_violations": [{"seller_id": "seller-a"}]}
+    },
+    "expected": {"primary_issue": "canceled_order_paid", "cause": "ORDER_CANCELED_AFTER_PAYMENT", "refund": 115.0, "action": "issue_full_refund", "rule_rank": 1}
+  },
+  {
+    "name": "unavailable paid",
+    "bundle": {
+      "policy_version": "EC_POLICY_V1",
+      "order_seller": {"order_status": "unavailable", "freight_total_brl": "12.50"},
+      "payment": {"payment_total_brl": "90.25", "payment_count": 1, "is_reconciled_within_0_10": true},
+      "delivery": {"is_delivered_late": null, "seller_handoff_violations": []}
+    },
+    "expected": {"primary_issue": "unavailable_order_paid", "cause": "ORDER_UNAVAILABLE_AFTER_PAYMENT", "refund": 90.25, "action": "issue_full_refund", "rule_rank": 2}
+  },
+  {
+    "name": "late seller",
+    "bundle": {
+      "policy_version": "EC_POLICY_V1",
+      "order_seller": {"order_status": "delivered", "freight_total_brl": "17.40"},
+      "payment": {"payment_total_brl": "117.40", "payment_count": 1, "is_reconciled_within_0_10": true},
+      "delivery": {"is_delivered_late": true, "seller_handoff_violations": [{"seller_id": "seller-b"}]}
+    },
+    "expected": {"primary_issue": "late_delivery_seller", "cause": "SELLER_HANDOFF_AFTER_LIMIT", "refund": 17.4, "action": "refund_freight", "rule_rank": 3}
+  },
+  {
+    "name": "late logistics",
+    "bundle": {
+      "policy_version": "EC_POLICY_V1",
+      "order_seller": {"order_status": "delivered", "freight_total_brl": "8.00"},
+      "payment": {"payment_total_brl": "58.00", "payment_count": 1, "is_reconciled_within_0_10": true},
+      "delivery": {"is_delivered_late": true, "seller_handoff_violations": []}
+    },
+    "expected": {"primary_issue": "late_delivery_logistics", "cause": "CARRIER_DELIVERED_AFTER_ESTIMATE", "refund": 8.0, "action": "refund_freight", "rule_rank": 4}
+  },
+  {
+    "name": "valid split payment",
+    "bundle": {
+      "policy_version": "EC_POLICY_V1",
+      "order_seller": {"order_status": "delivered", "freight_total_brl": "10.00"},
+      "payment": {"payment_total_brl": "110.00", "payment_count": 2, "is_reconciled_within_0_10": true},
+      "delivery": {"is_delivered_late": null, "seller_handoff_violations": []}
+    },
+    "expected": {"primary_issue": "valid_split_payment", "cause": "MULTIPLE_PAYMENTS_RECONCILED", "refund": 0.0, "action": "explain_valid_split_payment", "rule_rank": 5}
+  },
+  {
+    "name": "unsupported late claim",
+    "bundle": {
+      "policy_version": "EC_POLICY_V1",
+      "order_seller": {"order_status": "delivered", "freight_total_brl": "9.00"},
+      "payment": {"payment_total_brl": "109.00", "payment_count": 1, "is_reconciled_within_0_10": true},
+      "delivery": {"is_delivered_late": false, "seller_handoff_violations": []}
+    },
+    "expected": {"primary_issue": "unsupported_late_claim", "cause": "DELIVERY_WITHIN_ESTIMATE", "refund": 0.0, "action": "reject_late_refund", "rule_rank": 6}
+  }
+]

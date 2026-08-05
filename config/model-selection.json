@@ -1,0 +1,12 @@
+{
+  "provider": "openai",
+  "model_name": "gpt-4o-mini",
+  "current_snapshot": "gpt-4o-mini-2024-07-18",
+  "api_key_environment_variable": "OPENAI_API_KEY",
+  "supports_structured_outputs": true,
+  "supports_function_calling": true,
+  "parameter_count": null,
+  "parameter_limit_status": "unverified",
+  "parameter_count_source": "OpenAI's official model page does not publish a parameter count",
+  "promotion_allowed": false
+}

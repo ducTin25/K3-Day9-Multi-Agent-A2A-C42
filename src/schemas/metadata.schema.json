@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/ec-metadata-v1.json",
+  "type": "object",
+  "required": ["framework", "runtime", "agents"],
+  "properties": {
+    "framework": {"type": "string", "minLength": 1},
+    "runtime": {"type": "string", "minLength": 1},
+    "promoted_run_id": {"type": ["string", "null"]},
+    "agents": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["agent_id", "model_name", "parameter_count", "prompt_version", "tools"],
+        "properties": {
+          "agent_id": {"type": "string"},
+          "model_name": {"type": "string"},
+          "parameter_count": {"type": "integer", "minimum": 1, "maximum": 10000000000},
+          "parameter_count_source": {"type": "string"},
+          "prompt_version": {"type": "string"},
+          "tools": {"type": "array", "items": {"type": "string"}},
+          "fallback_models": {"type": "array"}
+        }
+      }
+    }
+  }
+}

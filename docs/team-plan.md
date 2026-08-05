@@ -411,8 +411,8 @@ Phần này giúp mỗi người theo dõi xuyên suốt mà không phải đọ
 
 #### TV5 — Policy/Verifier/QA
 
-- [ ] CP0: decision table + 6 golden cases + schema skeleton.
-- [ ] CP1: policy/verification deterministic tools.
+- [x] CP0: decision table + 6 golden cases + schema skeleton.
+- [x] CP1: policy/verification deterministic tools và run summarize/compare skeleton — xem [handoff](checkpoints/tv5-cp1.md).
 - [ ] CP2: hai agent invocation độc lập + prompts.
 - [ ] CP3: verify 6 branches và hai repair scenarios.
 - [ ] CP4: final validator cho 50 output.
